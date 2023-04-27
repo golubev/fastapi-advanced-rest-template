@@ -1,31 +1,19 @@
-# Developing a Single Page App with FastAPI and React
+# daily-rabbit
 
-### Want to learn how to build this?
+A brand new daily activities logging web application.
 
-Check out the [post](https://testdriven.io/blog/fastapi-react/).
+## Running the application locally
 
-## Want to use this project?
+### Prerequisites (dependencies)
 
-1. Fork/Clone
+- Docker ^23.0
+- Docker Compose ^2.17
+- nodejs ^12.22
+- npm ^8.5
 
-1. Run the server-side FastAPI app in one terminal window:
+### How to start
 
-    ```sh
-    $ cd backend
-    $ python3.9 -m venv env
-    $ source env/bin/activate
-    (env)$ pip install -r requirements.txt
-    (env)$ python main.py
-    ```
-
-    Navigate to [http://localhost:8000](http://localhost:8000)
-
-1. Run the client-side React app in a different terminal window:
-
-    ```sh
-    $ cd frontend
-    $ npm install
-    $ npm run start
-    ```
-
-    Navigate to [http://localhost:3000](http://localhost:3000)
+```sh
+make npm-install # only for the first time or when required
+make up
+```
