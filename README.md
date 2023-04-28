@@ -8,8 +8,8 @@ A brand new daily activities logging web application.
 
 - Docker ^23.0
 - Docker Compose ^2.17
-- nodejs ^12.22
-- npm ^8.5
+- nodejs ^18.16
+- npm ^9.5
 
 ### How to start
 

@@ -1,12 +1,12 @@
 .PHONY: up \
 	up-backend \
-	npm-start \
+	npm-run-dev \
 	npm-install \
 	help
 
 .DEFAULT_GOAL := help
 
-up: up-backend npm-start ## start both the frontend and the backend
+up: up-backend npm-run-dev ## start both the frontend and the backend
 
 up-backend: ## run docker compose up for the backend API
 	docker compose up --detach --build --force-recreate --wait --remove-orphans
@@ -14,9 +14,9 @@ up-backend: ## run docker compose up for the backend API
 down-backend: ## run docker compose down for the backend API
 	docker compose down
 
-npm-start: ## run npm start for the frontend
+npm-run-dev: ## run npm start for the frontend
 	cd ./frontend; \
-	npm start
+	npm run dev
 
 npm-install: ## run npm install for the frontend
 	cd ./frontend; \
