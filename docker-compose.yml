@@ -5,6 +5,8 @@ services:
     container_name: backend-api
     build:
       context: ./backend
+      args:
+        - DOCKER_BACKEND_UID
     volumes:
       - ./backend:/usr/src/app:rw
     ports:

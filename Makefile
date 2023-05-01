@@ -1,5 +1,7 @@
 .PHONY: up \
 	up-backend \
+	down-backend \
+	pip-install \
 	npm-run-dev \
 	npm-install \
 	help
@@ -13,6 +15,9 @@ up-backend: ## run docker compose up for the backend API
 
 down-backend: ## run docker compose down for the backend API
 	docker compose down
+
+pip-install: ## run pip install for the backend
+	docker compose run --rm backend-api python3 -m pip install --requirement ./requirements.txt --target ./.vendor-packages
 
 npm-run-dev: ## run npm start for the frontend
 	cd ./frontend; \

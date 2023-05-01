@@ -17,3 +17,7 @@ A brand new daily activities logging web application.
 make npm-install # only for the first time or when required
 make up
 ```
+
+### OpenAPI docs
+
+Navigate to http://localhost:8000/docs

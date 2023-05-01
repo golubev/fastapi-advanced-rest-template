@@ -1,12 +1,12 @@
-FROM python:3.11-alpine
-
-RUN apk add --update \
-    curl \
-    && rm -rf /var/cache/apk/*
+FROM python:3.11-bullseye
 
 WORKDIR /usr/src/app
 
-COPY ./requirements.txt .
-RUN python3 -m pip install --no-cache-dir --requirement ./requirements.txt
+ARG DOCKER_BACKEND_UID
+RUN groupadd -g $DOCKER_BACKEND_UID -o appuser
+RUN useradd -m -u $DOCKER_BACKEND_UID -g $DOCKER_BACKEND_UID -o -s /bin/bash appuser
+USER appuser
+
+ENV PYTHONPATH "${PYTHONPATH}:/usr/src/app/.vendor-packages"
 
 CMD [ "python", "./main.py" ]
