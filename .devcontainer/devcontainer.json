@@ -19,8 +19,7 @@
 			"extensions": [
 				"eamodio.gitlens",
 				"ms-python.isort",
-				"ms-python.python",
-				"ms-vscode.makefile-tools",
+				"ms-python.python"
 			]
 		}
 	}
