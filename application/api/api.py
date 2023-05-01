@@ -15,7 +15,7 @@ todos = [
 
 id_sequence = max(todo_item['id'] for todo_item in todos) + 1
 
-app = FastAPI()
+application = FastAPI()
 
 origins = [
     "http://localhost:3000",
@@ -23,7 +23,7 @@ origins = [
 ]
 
 
-app.add_middleware(
+application.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
         allow_credentials=True,
@@ -32,17 +32,17 @@ app.add_middleware(
 )
 
 
-@app.get("/", tags=["root"])
+@application.get("/", tags=["root"])
 async def read_root() -> dict:
     return {"message": "Welcome to your todo list."}
 
 
-@app.get("/todo", tags=["todos"])
+@application.get("/todo", tags=["todos"])
 async def get_todos() -> dict:
     return { "data": todos }
 
 
-@app.post("/todo", tags=["todos"])
+@application.post("/todo", tags=["todos"])
 async def add_todo(todo: dict) -> dict:
     global id_sequence
     todo["id"] = id_sequence
@@ -53,7 +53,7 @@ async def add_todo(todo: dict) -> dict:
     }
 
 
-@app.put("/todo/{id}", tags=["todos"])
+@application.put("/todo/{id}", tags=["todos"])
 async def update_todo(id: int, body: dict) -> dict:
     for todo in todos:
         if todo["id"] == id:
@@ -67,7 +67,7 @@ async def update_todo(id: int, body: dict) -> dict:
     }
 
 
-@app.delete("/todo/{id}", tags=["todos"])
+@application.delete("/todo/{id}", tags=["todos"])
 async def delete_todo(id: int) -> dict:
     for todo in todos:
         if todo["id"] == id:

@@ -1,8 +1,3 @@
 {
-    "python.analysis.extraPaths": [
-        "./backend/.vendor-packages"
-    ],
-    "python.autoComplete.extraPaths": [
-        "./backend/.vendor-packages"
-    ]
+    "python.formatting.provider": "black"
 }

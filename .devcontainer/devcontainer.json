@@ -1,0 +1,27 @@
+{
+	"name": "Daily Rabbit API",
+	"dockerComposeFile": [
+		"../docker-compose.yml",
+		"docker-compose.override.yml"
+	],
+	"service": "api",
+	// The optional 'workspaceFolder' property is the path VS Code should open by default when
+	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+	},
+	"runServices": [],
+	"shutdownAction": "none",
+	"postCreateCommand": "",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"eamodio.gitlens",
+				"ms-python.isort",
+				"ms-python.python",
+				"ms-vscode.makefile-tools",
+			]
+		}
+	}
+}

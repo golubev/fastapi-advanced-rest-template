@@ -1,14 +1,14 @@
 version: "3.8"
 
 services:
-  backend-api:
-    container_name: backend-api
+  api:
+    container_name: api
     build:
-      context: ./backend
+      context: ./application
       args:
         - DOCKER_BACKEND_UID
     volumes:
-      - ./backend:/usr/src/app:rw
+      - ./application:/usr/src/app:rw
     ports:
       - "8000:8000"
     healthcheck:
