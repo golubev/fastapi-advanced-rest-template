@@ -1,6 +1,9 @@
 # daily-rabbit-api
 
-A brand new daily activities logging web application.
+
+API backend for the brand new daily activities logging web application.
+
+Frontend repo - https://github.com/golubev/daily-rabbit-frontend.
 
 
 ## Prerequisites (dependencies)
