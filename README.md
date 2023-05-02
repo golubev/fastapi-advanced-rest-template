@@ -12,9 +12,19 @@ Frontend repo - https://github.com/golubev/daily-rabbit-frontend.
 - Docker Compose plugin ^2.17
 
 
+## Before you start
+
+> ⚠️ Make sure you've created a `.env` file from the `.env.example` template:
+> ```sh
+> cp .env.example .env
+> ```
+> reviewed the values and changed were it was required.
+
 ## How to start with vscode
 
-Dev Containers, the vscode's remote development feature, is being used in order to get fully-integrated IDE with application's dockerized Python environment. In order to run vscode inside the application's container do the following:
+The vscode's Dev Containers, a remote development feature, are being used in order to get fully-integrated IDE with application's dockerized Python environment. And to get a decent developer experience (DX).
+
+In order to run vscode inside the application's container do the following:
 
 1. in vscode open the project's directory
 2. hit Ctrl+Shift+P

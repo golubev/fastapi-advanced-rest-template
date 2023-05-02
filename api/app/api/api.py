@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.db import init_db
+
 
 todos = [
     {"id": 1, "item": "Read a book."},
@@ -10,6 +12,12 @@ todos = [
 id_sequence = max(todo_item["id"] for todo_item in todos) + 1
 
 application = FastAPI()
+
+
+@application.on_event("startup")
+def on_startup():
+    init_db()
+
 
 origins = ["http://localhost:3000", "localhost:3000"]
 

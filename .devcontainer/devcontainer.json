@@ -9,8 +9,7 @@
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	"features": {
-	},
+	"features": {},
 	"runServices": [],
 	"shutdownAction": "none",
 	"postCreateCommand": "",
