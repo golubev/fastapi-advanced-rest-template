@@ -1,8 +1,5 @@
 FROM python:3.11-bullseye
 
-WORKDIR /usr/src/app
-ENV PYTHONPATH=/usr/src/app
-
 COPY ./requirements*.txt .
 RUN pip install --requirement ./requirements.dev.txt
 

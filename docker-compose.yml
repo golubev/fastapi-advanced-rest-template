@@ -9,14 +9,16 @@ services:
         - DOCKER_BACKEND_UID
     command:
       - "python"
-      - "./app/main.py"
+      - "/workspace/api/app/main.py"
     environment:
+      - PYTHONPATH=/workspace/api
       - POSTGRES_HOST
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+    working_dir: /workspace
     volumes:
-      - ./api:/usr/src/app:rw
+      - .:/workspace:rw
     networks:
       - daily_rabbit_network
     ports:
