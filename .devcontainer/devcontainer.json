@@ -4,14 +4,14 @@
 		"../docker-compose.yml"
 	],
 	"service": "api",
-	// The optional 'workspaceFolder' property is the path VS Code should open by default when
-	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
+	// the path VS Code should open by default when connected
 	"workspaceFolder": "/workspace",
-	// Features to add to the dev container. More info: https://containers.dev/features.
+	// features to add to the dev container, see https://containers.dev/features
 	"features": {},
 	"runServices": [],
 	"shutdownAction": "none",
-	"postCreateCommand": "",
+	// add a line to `.bashrc` to start the terminal at the API application's source directory
+	"postCreateCommand": "echo 'cd /workspace/api' >> ~/.bashrc",
 	"customizations": {
 		"vscode": {
 			"extensions": [
