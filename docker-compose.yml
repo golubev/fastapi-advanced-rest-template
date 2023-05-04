@@ -12,6 +12,8 @@ services:
       - "/workspace/api/app/main.py"
     environment:
       - PYTHONPATH=/workspace/api
+      - SECURITY_SECRET_KEY
+      - SECURITY_ACCESS_TOKEN_EXPIRE_SECONDS
       - POSTGRES_HOST
       - POSTGRES_DB
       - POSTGRES_USER

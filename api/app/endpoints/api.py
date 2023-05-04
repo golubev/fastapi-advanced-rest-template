@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db import init_db
+from app.endpoints import routes
 
 
 todos = [
@@ -14,11 +14,6 @@ id_sequence = max(todo_item["id"] for todo_item in todos) + 1
 application = FastAPI()
 
 
-@application.on_event("startup")
-def on_startup():
-    init_db()
-
-
 origins = ["http://localhost:3000", "localhost:3000"]
 
 
@@ -29,6 +24,9 @@ application.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+application.include_router(routes.login.router, tags=["Login"])
+application.include_router(routes.users.router, tags=["Users"])
 
 
 @application.get("/", tags=["root"])
