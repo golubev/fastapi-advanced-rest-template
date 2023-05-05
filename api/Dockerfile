@@ -1,5 +1,9 @@
 FROM python:3.11-bullseye
 
+RUN apt update && apt install -y \
+        nano \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV TZ=UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
