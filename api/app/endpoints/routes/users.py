@@ -25,7 +25,8 @@ def create_user(
     """
     validate_user_email_not_exists(create_api_model.email, db)
     validate_user_username_not_exists(create_api_model.username, db)
-    return user_service.create(db, create_api_model=create_api_model)
+    user_db_model = user_service.create(db, create_api_model=create_api_model)
+    return UserRead.from_db_model(user_db_model)
 
 
 @router.get("/users/current-user")
@@ -51,7 +52,7 @@ def update_current_user(
     """
     if update_api_model.username != current_user.username:
         validate_user_username_not_exists(update_api_model.username, db)
-    user = user_service.update(
+    user_db_model = user_service.update(
         db, db_model=current_user, data_to_update=update_api_model
     )
-    return user
+    return UserRead.from_db_model(user_db_model)

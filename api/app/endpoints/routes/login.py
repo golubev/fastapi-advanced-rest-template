@@ -17,7 +17,7 @@ def login_for_access_token(
     """
     OAuth2 compatible token login, get an access token for future requests
     """
-    user = user_service.get_db_model_by_credentials_verified(
+    user = user_service.get_by_credentials_verified(
         db, username=form_data.username, password=form_data.password
     )
     if not user:
