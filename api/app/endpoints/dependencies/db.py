@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlalchemy.orm.session import Session
 
 from app.core.db import engine
 

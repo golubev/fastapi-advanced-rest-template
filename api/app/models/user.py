@@ -1,18 +1,19 @@
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.sql import func
 
-from pydantic import EmailStr
-from sqlmodel import Field, SQLModel
+from .base import BaseDBModel
 
 
-class User(SQLModel, table=True):
+class User(BaseDBModel):
     __tablename__: str = "users"
 
-    id: int | None = Field(default=None, primary_key=True)
-    username: str = Field(unique=True, nullable=False)
-    email: EmailStr = Field(unique=True, nullable=False)
-    full_name: str | None
+    id = Column(Integer, primary_key=True)
 
-    hashed_password: str
+    username = Column(String, unique=True, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    full_name = Column(String, nullable=True)
 
-    create_time: datetime
-    update_time: datetime
+    hashed_password = Column(String, nullable=False)
+
+    create_time = Column(DateTime, nullable=False, server_default=func.now())
+    update_time = Column(DateTime, nullable=True, default=None, onupdate=func.now())

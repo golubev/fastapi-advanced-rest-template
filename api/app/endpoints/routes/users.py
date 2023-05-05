@@ -36,7 +36,7 @@ def read_current_user(
     """
     Get current user.
     """
-    return UserRead.from_model(current_user)
+    return UserRead.from_db_model(current_user)
 
 
 @router.put("/users/current-user")

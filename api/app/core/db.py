@@ -1,4 +1,4 @@
-from sqlmodel import create_engine
+from sqlalchemy import create_engine
 
 from app.config import config
 
