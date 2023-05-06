@@ -7,9 +7,7 @@ services:
       context: ./api
       args:
         - DOCKER_BACKEND_UID
-    command:
-      - "python"
-      - "/workspace/api/app/main.py"
+    command: [ "python", "/workspace/api/app/main.py" ]
     environment:
       - PYTHONPATH=/workspace/api
       - SECURITY_SECRET_KEY
@@ -43,17 +41,19 @@ services:
     image: postgres:15.2-alpine
     container_name: daily_rabbit_postgres
     command:
-      - "postgres"
-      - "-c"
-      - "timezone=UTC"
-      - "-c"
-      - "shared_buffers=2GB"
-      - "-c"
-      - "work_mem=16GB"
-      # rough estimate of the number of how much memory is available
+      [
+        "postgres",
+        "-c",
+        "timezone=UTC",
+        "-c",
+        "shared_buffers=2GB",
+        "-c",
+        "work_mem=16GB",
+        # rough estimate of the number of how much memory is available
       # for disk caching by the OS
-      - "-c"
-      - "effective_cache_size=4GB"
+        "-c",
+        "effective_cache_size=4GB"
+      ]
     environment:
       - POSTGRES_DB
       - POSTGRES_USER
@@ -66,7 +66,7 @@ services:
       - "5544:5432"
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
       interval: 5s
       timeout: 5s
       retries: 10
