@@ -1,7 +1,0 @@
---requirement ./requirements.txt
-
-black==23.3.*
-mypy==1.2.*
-sqlalchemy[mypy]==1.4.*
-types-passlib==1.7.*
-types-python-jose==3.3.*
