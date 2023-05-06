@@ -1,4 +1,4 @@
-from pydantic import EmailStr, Field, SecretStr, ConstrainedStr
+from pydantic import ConstrainedStr, EmailStr, Field, SecretStr
 
 from .base import BaseAPIModel
 

@@ -13,7 +13,8 @@ UpdateAPIModelType = TypeVar("UpdateAPIModelType", bound=BaseAPIModel)
 class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
     def __init__(self, db_model_type: Type[DBModelType]):
         """
-        A service object with default methods to create, read, update and delete (CRUD) models.
+        A service object with default methods to create, read, update and
+        delete (CRUD) models.
         """
         self.db_model_type = db_model_type
 

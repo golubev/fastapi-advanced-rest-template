@@ -1,7 +1,7 @@
 """create users table
 
 Revision ID: 5f02da3a2e06
-Revises: 
+Revises:
 Create Date: 2023-05-05 10:25:24.328611
 
 """

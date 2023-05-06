@@ -1,6 +1,6 @@
 import secrets
 
-from pydantic import BaseSettings, PostgresDsn
+from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -18,7 +18,10 @@ class Settings(BaseSettings):
         case_sensitive = True
 
     def get_postgres_uri(self) -> str:
-        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}/{self.POSTGRES_DB}"
+        return (
+            f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+            f"@{self.POSTGRES_HOST}/{self.POSTGRES_DB}"
+        )
 
 
 config = Settings()

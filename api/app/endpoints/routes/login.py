@@ -12,7 +12,8 @@ router = APIRouter()
 
 @router.post("/login/access-token")
 def login_for_access_token(
-    db: Session = Depends(get_session), form_data: OAuth2PasswordRequestForm = Depends()
+    db: Session = Depends(get_session),
+    form_data: OAuth2PasswordRequestForm = Depends(),
 ) -> TokenResponse:
     """
     OAuth2 compatible token login, get an access token for future requests

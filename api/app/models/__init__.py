@@ -1,2 +1,2 @@
-from .base import BaseDBModel
-from .user import User
+from .base import BaseDBModel  # noqa: F401
+from .user import User  # noqa: F401
