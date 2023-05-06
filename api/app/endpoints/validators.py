@@ -13,7 +13,7 @@ def validate_user_email_not_exists(email: str, db: Session) -> None:
         )
 
 
-def validate_user_username_not_exists(username: str, db: Session):
+def validate_user_username_not_exists(username: str, db: Session) -> None:
     user = user_service.get_filtered_by(db, username=username)
     if user:
         raise HTTPException(

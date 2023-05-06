@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from typing import Self
 
 from jose import jwt
+from jose.exceptions import JWTError
 from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 
@@ -28,7 +29,7 @@ class AccessTokenPayload(BaseModel):
                 token, config.SECURITY_SECRET_KEY, algorithms=[ALGORITHM]
             )
             return cls(**payload)
-        except (jwt.JWTError, ValidationError):
+        except (JWTError, ValidationError):
             raise AccessTokenException()
 
     def encode_to_access_token(self) -> str:

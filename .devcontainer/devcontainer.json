@@ -16,8 +16,8 @@
 		"vscode": {
 			"extensions": [
 				"eamodio.gitlens",
-				"ms-python.isort",
-				"ms-python.python"
+				"ms-python.python",
+				"streetsidesoftware.code-spell-checker"
 			]
 		}
 	}

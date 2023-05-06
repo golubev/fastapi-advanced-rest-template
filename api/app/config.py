@@ -1,7 +1,6 @@
 import secrets
-from typing import Any, Optional
 
-from pydantic import BaseSettings, PostgresDsn, validator
+from pydantic import BaseSettings, PostgresDsn
 
 
 class Settings(BaseSettings):
@@ -12,24 +11,14 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
-    POSTGRES_URI: Optional[PostgresDsn] = None
 
     API_LIST_LIMIT_DEFAULT = 20
 
-    @validator("POSTGRES_URI", pre=True)
-    def assemble_db_connection(cls, v: Optional[str], values: dict[str, Any]) -> Any:
-        if isinstance(v, str):
-            return v
-        return PostgresDsn.build(
-            scheme="postgresql",
-            host=values.get("POSTGRES_HOST"),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
-            user=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-        )
-
     class Config:
         case_sensitive = True
+
+    def get_postgres_uri(self) -> str:
+        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}/{self.POSTGRES_DB}"
 
 
 config = Settings()

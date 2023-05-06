@@ -1,30 +1,28 @@
+from typing import Any
+
 from sqlalchemy.orm import Session
 
 from app.core.security import get_password_hash, verify_password
 from app.models.user import User
-from app.schemas.user import UserChangePassword, UserCreate, UserRead, UserUpdate
+from app.schemas.user import UserCreate, UserUpdate
 from app.services.base_service import BaseService
 
 
 class UserService(BaseService[User, UserCreate, UserUpdate]):
-    def create(self, db: Session, *, create_api_model: UserCreate) -> User:
-        data_to_create = dict(
-            username=create_api_model.username,
-            email=create_api_model.email,
-            full_name=create_api_model.full_name,
+    def create(
+        self, db: Session, *, data_to_create: UserCreate | dict[str, Any]
+    ) -> User:
+        if isinstance(data_to_create, dict):
+            data_to_create = UserCreate(**data_to_create)
+        data_to_create_prepared = dict(
+            username=data_to_create.username,
+            email=data_to_create.email,
+            full_name=data_to_create.full_name,
             hashed_password=get_password_hash(
-                create_api_model.password.get_secret_value()
+                data_to_create.password.get_secret_value()
             ),
         )
-        return super().create(db, data_to_create=data_to_create)
-
-    def change_password(
-        self, db: Session, *, db_model: User, update_api_model: UserChangePassword
-    ) -> User:
-        data_to_update = dict(
-            hashed_password=get_password_hash(update_api_model.password)
-        )
-        return super().update(db, db_model=db_model, data_to_update=data_to_update)
+        return super().create(db, data_to_create=data_to_create_prepared)
 
     def get_filtered_by(
         self, db: Session, *, email: str | None = None, username: str | None = None

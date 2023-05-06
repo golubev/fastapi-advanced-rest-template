@@ -25,7 +25,7 @@ def create_user(
     """
     validate_user_email_not_exists(create_api_model.email, db)
     validate_user_username_not_exists(create_api_model.username, db)
-    user_db_model = user_service.create(db, create_api_model=create_api_model)
+    user_db_model = user_service.create(db, data_to_create=create_api_model)
     return UserRead.from_db_model(user_db_model)
 
 

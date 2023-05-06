@@ -1,9 +1,7 @@
-from datetime import datetime
-from typing import Generic, Type, TypeVar
+from typing import Any, Generic, Type, TypeVar
 
 from sqlalchemy.orm import Session
 
-from app.config import config
 from app.models import BaseDBModel
 from app.schemas.base import BaseAPIModel
 
@@ -23,7 +21,7 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         return db.query(self.db_model_type).get(id)
 
     def create(
-        self, db: Session, *, data_to_create: CreateAPIModelType | dict
+        self, db: Session, *, data_to_create: CreateAPIModelType | dict[str, Any]
     ) -> DBModelType:
         if not isinstance(data_to_create, dict):
             data_to_create = data_to_create.dict()
@@ -38,7 +36,7 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         db: Session,
         *,
         db_model: DBModelType,
-        data_to_update: UpdateAPIModelType | dict
+        data_to_update: UpdateAPIModelType | dict[str, Any]
     ) -> DBModelType:
         if not isinstance(data_to_update, dict):
             data_to_update = data_to_update.dict()

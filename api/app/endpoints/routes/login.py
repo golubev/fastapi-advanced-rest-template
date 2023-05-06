@@ -25,4 +25,7 @@ def login_for_access_token(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect username or password",
         )
-    return TokenResponse(access_token=create_access_token(user.id), token_type="bearer")
+    subject_user_id: int = user.id  # type: ignore
+    return TokenResponse(
+        access_token=create_access_token(subject_user_id), token_type="bearer"
+    )

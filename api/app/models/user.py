@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.sql import func
+from sqlalchemy.ext.declarative import declarative_base
 
 from .base import BaseDBModel
 
@@ -7,13 +10,18 @@ from .base import BaseDBModel
 class User(BaseDBModel):
     __tablename__: str = "users"
 
-    id = Column(Integer, primary_key=True)
+    id: int | None = Column(Integer, primary_key=True)
 
-    username = Column(String, unique=True, nullable=False)
-    email = Column(String, unique=True, nullable=False)
-    full_name = Column(String, nullable=True)
+    username: str = Column(String, unique=True, nullable=False)
+    email: str = Column(String, unique=True, nullable=False)
+    full_name: str | None = Column(String, nullable=True)
 
-    hashed_password = Column(String, nullable=False)
+    hashed_password: str = Column(String, nullable=False)
 
-    create_time = Column(DateTime, nullable=False, server_default=func.now())
-    update_time = Column(DateTime, nullable=True, default=None, onupdate=func.now())
+    # timestamps are being set automatically
+    create_time: datetime | None = Column(
+        DateTime, nullable=False, server_default=func.now()
+    )
+    update_time: datetime | None = Column(
+        DateTime, nullable=True, default=None, onupdate=func.now()
+    )

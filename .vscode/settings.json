@@ -1,4 +1,14 @@
 {
     "editor.formatOnSave": true,
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "cSpell.words": [
+        "autoflush",
+        "eamodio",
+        "fastapi",
+        "mypy",
+        "onupdate",
+        "passlib",
+        "pydantic",
+        "sqlalchemy"
+    ]
 }
