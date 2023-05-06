@@ -2,13 +2,17 @@
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
     "cSpell.words": [
+        "autoflake",
         "autoflush",
         "eamodio",
         "fastapi",
+        "isort",
         "mypy",
         "onupdate",
         "passlib",
+        "psycopg",
         "pydantic",
-        "sqlalchemy"
+        "sqlalchemy",
+        "uvicorn"
     ]
 }
