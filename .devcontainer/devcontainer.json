@@ -10,8 +10,7 @@
 	"features": {},
 	"runServices": [],
 	"shutdownAction": "none",
-	// add a line to `.bashrc` to start the terminal at the API application's source directory
-	"postCreateCommand": "echo 'cd /workspace/api' >> ~/.bashrc",
+	"postCreateCommand": "/workspace/.devcontainer/post-create.sh",
 	"customizations": {
 		"vscode": {
 			"extensions": [
