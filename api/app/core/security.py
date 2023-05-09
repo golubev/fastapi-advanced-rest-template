@@ -38,7 +38,7 @@ class AccessTokenPayload(BaseModel):
         )
 
 
-def create_access_token(subject: int | str) -> str:
+def generate_access_token(subject: int | str) -> str:
     expire = datetime.utcnow() + timedelta(
         seconds=config.SECURITY_ACCESS_TOKEN_EXPIRE_SECONDS
     )

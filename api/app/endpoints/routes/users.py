@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.endpoints.dependencies.auth import get_current_user
-from app.endpoints.dependencies.db import get_session
+from app.endpoints.dependencies.db import yield_session
 from app.endpoints.validators import (
     validate_user_email_not_exists,
     validate_user_username_not_exists,
@@ -17,7 +17,7 @@ router = APIRouter()
 @router.post("/users/")
 def create_user(
     *,
-    db: Session = Depends(get_session),
+    db: Session = Depends(yield_session),
     create_api_model: UserCreate,
 ) -> UserRead:
     """
@@ -43,7 +43,7 @@ def read_current_user(
 @router.put("/users/current-user")
 def update_current_user(
     *,
-    db: Session = Depends(get_session),
+    db: Session = Depends(yield_session),
     current_user: User = Depends(get_current_user),
     update_api_model: UserUpdate,
 ) -> UserRead:

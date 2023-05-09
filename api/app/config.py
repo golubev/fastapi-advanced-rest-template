@@ -4,6 +4,8 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
+    ENVIRONMENT: str = "prod"
+
     SECURITY_SECRET_KEY: str = secrets.token_urlsafe(32)
     SECURITY_ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 7  # 7 days
 

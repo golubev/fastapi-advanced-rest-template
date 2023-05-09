@@ -2,9 +2,9 @@ from typing import Generator
 
 from sqlalchemy.orm.session import Session
 
-from app.core.db import engine
+from app.core.db import get_session
 
 
-def get_session() -> Generator[Session, None, None]:
-    with Session(engine, autocommit=False, autoflush=False) as session:
+def yield_session() -> Generator[Session, None, None]:
+    with get_session() as session:
         yield session

@@ -2,9 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from app.core.security import create_access_token
-from app.endpoints.dependencies.db import get_session
+from app.core.security import generate_access_token
+from app.endpoints.dependencies.auth import get_current_user
+from app.endpoints.dependencies.db import yield_session
+from app.models import User
 from app.schemas.token import TokenResponse
+from app.schemas.user import UserRead
 from app.services import user_service
 
 router = APIRouter()
@@ -12,7 +15,7 @@ router = APIRouter()
 
 @router.post("/login/access-token")
 def login_for_access_token(
-    db: Session = Depends(get_session),
+    db: Session = Depends(yield_session),
     form_data: OAuth2PasswordRequestForm = Depends(),
 ) -> TokenResponse:
     """
@@ -28,5 +31,16 @@ def login_for_access_token(
         )
     subject_user_id: int = user.id  # type: ignore
     return TokenResponse(
-        access_token=create_access_token(subject_user_id), token_type="bearer"
+        access_token=generate_access_token(subject_user_id), token_type="bearer"
     )
+
+
+@router.get("/login/who-am-i")
+def read_current_user(
+    *,
+    current_user: User = Depends(get_current_user),
+) -> UserRead:
+    """
+    Get current user. Endpoint used to test the auth flow.
+    """
+    return UserRead.from_db_model(current_user)
