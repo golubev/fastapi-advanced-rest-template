@@ -1,10 +1,10 @@
 {
-    "editor.formatOnSave": true,
     "python.formatting.provider": "black",
     "cSpell.words": [
         "appuser",
         "autoflake",
         "autoflush",
+        "autouse",
         "azuretools",
         "devcontainer",
         "eamodio",

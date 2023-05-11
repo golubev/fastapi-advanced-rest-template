@@ -22,6 +22,7 @@ uvicorn = "~0.22.0"
 [tool.poetry.group.dev.dependencies]
 autoflake = "~1.7.8"
 black = "~23.3.0"
+faker = "~18.7.0"
 flake8 = "~5.0.4"
 httpx = "~0.24.0"
 isort = "~5.12.0"
