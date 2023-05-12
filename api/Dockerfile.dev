@@ -5,9 +5,10 @@ WORKDIR /usr/src/app
 ENV TZ=UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-ARG DOCKER_BACKEND_UID
-RUN groupadd -g $DOCKER_BACKEND_UID -o appuser
-RUN useradd -m -u $DOCKER_BACKEND_UID -g $DOCKER_BACKEND_UID -o -s /bin/bash appuser
+ARG DOCKER_USER_UID=1000
+ARG DOCKER_USER_GID=1000
+RUN groupadd -g $DOCKER_USER_GID -o appuser
+RUN useradd -m -u $DOCKER_USER_UID -g $DOCKER_USER_GID -o -s /bin/bash appuser
 
 ENV POETRY_HOME=/opt/poetry \
     POETRY_VERSION="1.4.2" \

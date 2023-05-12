@@ -1,24 +1,21 @@
 # API backend
 
 
-## Frequently used commands
+## Database migrations
 
-### Add a Python dependency package
+### Apply all migrations
 
-General dependency:
 ```
-poetry add fastapi@~0.95.1
-```
-
-Dev dependency:
-```
-poetry add --group dev httpx@~0.24.0
+alembic upgrade head
 ```
 
-Update dependencies and the `poetry.lock` file:
+### Create a migration
+
+Creates a new alembic revision (migration) according to diff in the models' source code and database schema:
 ```
-poetry update
+alembic revision --autogenerate -m "create users table"
 ```
+
 
 ## Codestyle and code static analysis
 
@@ -27,6 +24,7 @@ poetry update
 ```
 ./do-lint.sh
 ```
+
 ### Autoformatting and cleaning the code
 
 Autoformat the code, sort imports, remove unused imports, remove unused variables:
@@ -34,12 +32,16 @@ Autoformat the code, sort imports, remove unused imports, remove unused variable
 ./do-autoformat-and-clean.sh
 ```
 
+
 ## Testing
 
-Running tests:
+### Running tests
+
 ```
 ./do-test.sh
 ```
+
+### Running only specific tests
 
 You may also filter tests to be run using the pytest `-k` flag.
 
@@ -51,4 +53,25 @@ E.g. by test function name:
 Or e.g. by test file:
 ```
 ./do-test.sh -k "user_service"
+```
+
+
+## Packages management
+
+### Add a general dependency
+
+```
+poetry add fastapi@~0.95.1
+```
+
+### Add a dev dependency
+
+```
+poetry add --group dev httpx@~0.24.0
+```
+
+### Update dependencies and the `poetry.lock` file:
+
+```
+poetry update
 ```

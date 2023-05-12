@@ -1,0 +1,19 @@
+name: pull-request
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  code-quality-checks:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure and start the application
+        run: |
+          cp .env.ci .env
+          export DOCKER_USER_UID=$(id -u)
+          export DOCKER_USER_GID=$(id -g)
+          docker compose up --detach --build --wait api
+      - name: Run code quality static analysis tools
+        run: docker compose exec api ./api/do-lint.sh
+      - name: Run tests
+        run: docker compose exec api ./api/do-test.sh
