@@ -7,7 +7,8 @@ services:
       context: ./api
       dockerfile: Dockerfile.dev
       args:
-        - DOCKER_BACKEND_UID=${DOCKER_BACKEND_UID:-1000}
+        - DOCKER_USER_UID=${DOCKER_USER_UID:-1000}
+        - DOCKER_USER_GID=${DOCKER_USER_GID:-1000}
     command:
       [
         "uvicorn",
