@@ -9,21 +9,6 @@ from app.services.base_service import BaseService
 
 
 class UserService(BaseService[User, UserCreate, UserUpdate]):
-    def create(
-        self, db: Session, *, data_to_create: UserCreate | dict[str, Any]
-    ) -> User:
-        if isinstance(data_to_create, dict):
-            data_to_create = UserCreate(**data_to_create)
-        data_to_create_prepared = dict(
-            username=data_to_create.username,
-            email=data_to_create.email,
-            full_name=data_to_create.full_name,
-            hashed_password=get_password_hash(
-                data_to_create.password.get_secret_value()
-            ),
-        )
-        return super().create(db, data_to_create=data_to_create_prepared)
-
     def get_filtered_by(
         self, db: Session, *, email: str | None = None, username: str | None = None
     ) -> User | None:
@@ -43,6 +28,21 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
         if not verify_password(password, user.hashed_password):
             return None
         return user
+
+    def create(
+        self, db: Session, *, data_to_create: UserCreate | dict[str, Any]
+    ) -> User:
+        if isinstance(data_to_create, dict):
+            data_to_create = UserCreate(**data_to_create)
+        data_to_create_prepared = dict(
+            username=data_to_create.username,
+            email=data_to_create.email,
+            full_name=data_to_create.full_name,
+            hashed_password=get_password_hash(
+                data_to_create.password.get_secret_value()
+            ),
+        )
+        return super().create(db, data_to_create=data_to_create_prepared)
 
 
 user_service = UserService(User)

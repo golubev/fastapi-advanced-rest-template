@@ -6,6 +6,7 @@
         "autoflush",
         "autouse",
         "azuretools",
+        "codestyle",
         "devcontainer",
         "eamodio",
         "fastapi",

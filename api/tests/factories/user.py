@@ -12,18 +12,18 @@ def make(
     full_name: str | None = None,
     password: str | None = None,
 ) -> User:
-    fake_profile = faker.profile(
-        fields=[
-            "username",
-            "mail",
-            "name",
-        ]
-    )
+    if username is None:
+        username = faker.unique.user_name()
+    if email is None:
+        email = faker.unique.free_email()
+    if full_name is None:
+        is_male = faker.random_element(["F", "M"]) == "M"
+        full_name = faker.unique.name_male() if is_male else faker.unique.name_female()
     if password is None:
-        password = faker.password()
+        password = faker.unique.password()
     return User(
-        username=username if username is not None else fake_profile["username"],
-        email=email if email is not None else fake_profile["mail"],
-        full_name=full_name if full_name is not None else fake_profile["name"],
+        username=username,
+        email=email,
+        full_name=full_name,
         hashed_password=get_password_hash(password),
     )

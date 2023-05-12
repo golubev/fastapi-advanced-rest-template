@@ -1,6 +1,8 @@
+from random import randint
 from typing import Callable, Generator
 
 import pytest
+from faker import Faker
 from fastapi import Depends
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
@@ -11,12 +13,9 @@ from app.endpoints.dependencies.db import yield_session
 from app.main import application
 from app.models import User
 from app.services import user_service
+from tests.common import get_db_model_or_exception
 
 FAKER_LOCALES = ["en_US"]
-
-
-class BrokenTestException(BaseException):
-    pass
 
 
 @pytest.fixture(scope="session")
@@ -31,9 +30,16 @@ def client() -> Generator[TestClient, None, None]:
         yield test_client
 
 
-@pytest.fixture(scope="session", autouse=True)
-def faker_session_locale() -> list[str]:
-    return FAKER_LOCALES
+@pytest.fixture(scope="session")
+def session_faker() -> Faker:
+    """
+    A session faker that does not clear the `.unique` seen values like it is
+    being done in the native faker's pytest fixture. See:
+    https://github.com/joke2k/faker/blob/13344ed67ab423bb820b37800b4f4629f693aa0d/faker/contrib/pytest/plugin.py#L36  # noqa: E501
+    """
+    faker = Faker(locale=FAKER_LOCALES)
+    faker.seed_instance(randint(0, 2**16))
+    return faker
 
 
 @pytest.fixture(scope="function")
@@ -50,12 +56,7 @@ def force_authenticate_user(
 
         # user models are fetched from different sessions to avoid errors like
         # "Object '<User at ...>' already attached to session '...'"
-        user = user_service.get_filtered_by(db, username=username)
-        if user is None:
-            raise BrokenTestException(
-                f"Authentication fixture failed: user '{username}' not found."
-                " Check the user exists in the `seed_database.py` script"
-            )
+        user = get_db_model_or_exception(db, User, username=username)
 
         application.dependency_overrides[get_current_user] = get_current_user_override
 

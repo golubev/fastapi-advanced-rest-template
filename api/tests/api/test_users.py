@@ -4,49 +4,22 @@ import pytest
 from faker import Faker
 from fastapi import status
 from fastapi.testclient import TestClient
-from httpx import Response
 from sqlalchemy.orm import Session
 
 from app.core.security import verify_password
 from app.models import User
 from app.services import user_service
-from tests import factories
+from tests import factories, schemas
 
 
-def post_create_user(
-    client: TestClient,
-    faker: Faker,
-    *,
-    user_model: User,
-    user_password: str | None = None,
-) -> Response:
-    if user_password is None:
-        user_password = faker.password()
-    return client.post(
+def test_create_user_successful(
+    client: TestClient, db: Session, session_faker: Faker
+) -> None:
+    fake_user_password = session_faker.unique.password()
+    fake_user = factories.user.make(session_faker, password=fake_user_password)
+    response = client.post(
         "/users/",
-        json={
-            "username": user_model.username,
-            "full_name": user_model.full_name,
-            "email": user_model.email,
-            "password": user_password,
-        },
-    )
-
-
-def make_user_response(user_model: User) -> dict[str, str | int | None]:
-    return {
-        "id": user_model.id,
-        "username": user_model.username,
-        "full_name": user_model.full_name,
-        "email": user_model.email,
-    }
-
-
-def test_create_user_successful(client: TestClient, db: Session, faker: Faker) -> None:
-    fake_user_password = faker.password()
-    fake_user = factories.user.make(faker, password=fake_user_password)
-    response = post_create_user(
-        client, faker, user_model=fake_user, user_password=fake_user_password
+        json=schemas.user.make_user_create_dict(fake_user, password=fake_user_password),
     )
     assert response.status_code == status.HTTP_200_OK
 
@@ -60,7 +33,7 @@ def test_create_user_successful(client: TestClient, db: Session, faker: Faker) -
 
     # assert response content
     response_payload = response.json()
-    assert response_payload == make_user_response(user_created)
+    assert response_payload == schemas.user.make_user_response_dict(user_created)
 
 
 @pytest.mark.parametrize(
@@ -71,15 +44,20 @@ def test_create_user_successful(client: TestClient, db: Session, faker: Faker) -
     ],
 )
 def test_create_user_conflict(
-    client: TestClient, faker: Faker, conflict_user_data: dict[str, str]
+    client: TestClient, session_faker: Faker, conflict_user_data: dict[str, str]
 ) -> None:
-    fake_user = factories.user.make(faker, **conflict_user_data)
-    response = post_create_user(client, faker, user_model=fake_user)
+    fake_user_password = session_faker.unique.password()
+    conflict_user_data["password"] = fake_user_password
+    fake_user = factories.user.make(session_faker, **conflict_user_data)
+    response = client.post(
+        "/users/",
+        json=schemas.user.make_user_create_dict(fake_user, password=fake_user_password),
+    )
     assert response.status_code == status.HTTP_409_CONFLICT
 
 
 @pytest.mark.parametrize(
-    "field,value_invalid",
+    "field, value_invalid",
     [
         ("username", ""),
         ("username", "johnny.test@bad"),
@@ -89,14 +67,17 @@ def test_create_user_conflict(
     ],
 )
 def test_create_user_invalid(
-    client: TestClient, faker: Faker, field: str, value_invalid: str
+    client: TestClient, session_faker: Faker, field: str, value_invalid: str
 ) -> None:
-    fake_user = factories.user.make(faker, **{field: value_invalid})
-    response = post_create_user(
-        client,
-        faker,
-        user_model=fake_user,
-        user_password=value_invalid if field == "password" else None,
+    fake_user_password = (
+        value_invalid if field == "password" else session_faker.unique.password()
+    )
+    factory_kwargs = {field: value_invalid}
+    factory_kwargs["password"] = fake_user_password
+    fake_user = factories.user.make(session_faker, **factory_kwargs)
+    response = client.post(
+        "/users/",
+        json=schemas.user.make_user_create_dict(fake_user, password=fake_user_password),
     )
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
@@ -104,12 +85,12 @@ def test_create_user_invalid(
 def test_read_current_user_successful(
     client: TestClient, force_authenticate_user: Callable[[str], User]
 ) -> None:
-    user_authenticated = force_authenticate_user("johnny.test")
+    user_authenticated = force_authenticate_user("johnny.test.readonly")
     response = client.get("/users/current-user")
     assert response.status_code == status.HTTP_200_OK
 
     response_payload = response.json()
-    assert response_payload == make_user_response(user_authenticated)
+    assert response_payload == schemas.user.make_user_response_dict(user_authenticated)
 
 
 def test_read_current_user_unauthorized(client: TestClient) -> None:
@@ -120,10 +101,10 @@ def test_read_current_user_unauthorized(client: TestClient) -> None:
 def test_update_current_user_successful(
     client: TestClient, db: Session, force_authenticate_user: Callable[[str], User]
 ) -> None:
-    username_to_set = "johnny.the.updater"
+    username_to_set = "johnny.updated_via_api"
     full_name_to_set = "Giovanni Giorgio"
 
-    force_authenticate_user("johnny.test.update")
+    force_authenticate_user("johnny.test.api.update")
     response = client.put(
         "/users/current-user",
         json={
@@ -136,12 +117,11 @@ def test_update_current_user_successful(
     # assert user was correctly updated in the DB
     user_updated = user_service.get_filtered_by(db, username=username_to_set)
     assert user_updated
-    assert user_updated.username == username_to_set
     assert user_updated.full_name == full_name_to_set
 
     # assert response content
     response_payload = response.json()
-    assert response_payload == make_user_response(user_updated)
+    assert response_payload == schemas.user.make_user_response_dict(user_updated)
 
 
 def test_update_current_user_unauthorized(client: TestClient) -> None:
@@ -152,7 +132,7 @@ def test_update_current_user_unauthorized(client: TestClient) -> None:
 def test_update_current_user_conflict(
     client: TestClient, force_authenticate_user: Callable[[str], User]
 ) -> None:
-    force_authenticate_user("johnny.test.update.conflict")
+    force_authenticate_user("johnny.test.api.update.conflict")
     response = client.put(
         "/users/current-user",
         json={
@@ -164,7 +144,7 @@ def test_update_current_user_conflict(
 
 
 @pytest.mark.parametrize(
-    "field,value_invalid",
+    "field, value_invalid",
     [
         ("username", ""),
         ("username", "johnny.test@bad"),
@@ -176,9 +156,9 @@ def test_update_current_user_invalid(
     field: str,
     value_invalid: str,
 ) -> None:
-    force_authenticate_user("johnny.test.update.bad")
+    force_authenticate_user("johnny.test.api.update.bad")
     fields_to_update = {
-        "username": "johnny.test.update.very_bad",
+        "username": "johnny.test.api.update.very_bad",
         "full_name": "The Bad Man",
     }
     fields_to_update[field] = value_invalid

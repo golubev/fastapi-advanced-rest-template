@@ -18,7 +18,7 @@ class UserCreate(UserUpdate):
     password: SecretStr = Field(min_length=8, example="XZ#o2Q#eQ3y1")
 
 
-class UserRead(BaseAPIModel):
+class UserResponse(BaseAPIModel):
     id: int = Field(example=1)
     username: str = Field(example="john.doe")
     email: str = Field(example="john.doe@mail.com")

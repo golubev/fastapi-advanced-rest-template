@@ -38,7 +38,7 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         *,
         db_model: DBModelType,
         data_to_update: UpdateAPIModelType | dict[str, Any]
-    ) -> DBModelType:
+    ) -> None:
         if not isinstance(data_to_update, dict):
             data_to_update = data_to_update.dict()
         for field in data_to_update:
@@ -46,7 +46,6 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         db.add(db_model)
         db.commit()
         db.refresh(db_model)
-        return db_model
 
     def delete(self, db: Session, *, id: int) -> None:
         db_model = db.query(self.db_model_type).get(id)

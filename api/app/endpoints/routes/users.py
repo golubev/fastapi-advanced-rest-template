@@ -8,7 +8,7 @@ from app.endpoints.validators import (
     validate_user_username_not_exists,
 )
 from app.models.user import User
-from app.schemas.user import UserCreate, UserRead, UserUpdate
+from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.services import user_service
 
 router = APIRouter()
@@ -19,25 +19,25 @@ def create_user(
     *,
     db: Session = Depends(yield_session),
     create_api_model: UserCreate,
-) -> UserRead:
+) -> UserResponse:
     """
     Register a new user.
     """
     validate_user_email_not_exists(create_api_model.email, db)
     validate_user_username_not_exists(create_api_model.username, db)
     user_db_model = user_service.create(db, data_to_create=create_api_model)
-    return UserRead.from_db_model(user_db_model)
+    return UserResponse.from_db_model(user_db_model)
 
 
 @router.get("/users/current-user")
 def read_current_user(
     *,
     current_user: User = Depends(get_current_user),
-) -> UserRead:
+) -> UserResponse:
     """
     Get current user.
     """
-    return UserRead.from_db_model(current_user)
+    return UserResponse.from_db_model(current_user)
 
 
 @router.put("/users/current-user")
@@ -46,13 +46,11 @@ def update_current_user(
     db: Session = Depends(yield_session),
     current_user: User = Depends(get_current_user),
     update_api_model: UserUpdate,
-) -> UserRead:
+) -> UserResponse:
     """
     Update current user's details.
     """
     if update_api_model.username != current_user.username:
         validate_user_username_not_exists(update_api_model.username, db)
-    user_db_model = user_service.update(
-        db, db_model=current_user, data_to_update=update_api_model
-    )
-    return UserRead.from_db_model(user_db_model)
+    user_service.update(db, db_model=current_user, data_to_update=update_api_model)
+    return UserResponse.from_db_model(current_user)

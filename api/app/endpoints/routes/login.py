@@ -7,7 +7,7 @@ from app.endpoints.dependencies.auth import get_current_user
 from app.endpoints.dependencies.db import yield_session
 from app.models import User
 from app.schemas.token import TokenResponse
-from app.schemas.user import UserRead
+from app.schemas.user import UserResponse
 from app.services import user_service
 
 router = APIRouter()
@@ -39,8 +39,8 @@ def login_for_access_token(
 def read_current_user(
     *,
     current_user: User = Depends(get_current_user),
-) -> UserRead:
+) -> UserResponse:
     """
     Get current user. Endpoint used to test the auth flow.
     """
-    return UserRead.from_db_model(current_user)
+    return UserResponse.from_db_model(current_user)
