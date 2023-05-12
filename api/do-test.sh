@@ -8,6 +8,11 @@ if [ $ENVIRONMENT != "dev" ] && [ $ENVIRONMENT != "test" ]; then
     exit 1
 fi
 
+# change the working dir to the application's root directory to make all
+# tools' configs discoverable and all relative paths to be correct
+SOURCE_CODE_DIR=$(dirname "$(readlink -f "$0")")
+cd $SOURCE_CODE_DIR
+
 POSTGRES_HOST_TEST="postgres_test"
 POSTGRES_DB_TEST="test_database"
 POSTGRES_USER_TEST="postgres"
