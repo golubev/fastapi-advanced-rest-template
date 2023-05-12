@@ -4,7 +4,7 @@ set -u
 set -e
 
 if [ $ENVIRONMENT != "dev" ] && [ $ENVIRONMENT != "test" ]; then
-    echo "Running tests allowed only in 'dev' or 'test' environments"
+    echo "Running tests is allowed only in 'dev' or 'test' environments."
     exit 1
 fi
 
@@ -18,23 +18,27 @@ POSTGRES_DB_TEST="test_database"
 POSTGRES_USER_TEST="postgres"
 POSTGRES_PASSWORD_TEST="test_password"
 
-# override the database connection variables to the test ones
-#
-# NOTE: these overrides take effect in the current scripts' session only
-export POSTGRES_HOST=$POSTGRES_HOST_TEST
-export POSTGRES_DB=$POSTGRES_DB_TEST
-export POSTGRES_USER=$POSTGRES_USER_TEST
-export POSTGRES_PASSWORD=$POSTGRES_PASSWORD_TEST
+if [ $ENVIRONMENT != "test" ]; then
+    # override the database connection variables to the test ones to use
+    # separate isolated databases for testing and deveoplment in `dev`
+    # environments
+    #
+    # NOTE: these overrides take effect in the current scripts' session only
+    export POSTGRES_HOST=$POSTGRES_HOST_TEST
+    export POSTGRES_DB=$POSTGRES_DB_TEST
+    export POSTGRES_USER=$POSTGRES_USER_TEST
+    export POSTGRES_PASSWORD=$POSTGRES_PASSWORD_TEST
+fi
 
 # recreate the test database
-PGPASSWORD=$POSTGRES_PASSWORD_TEST psql \
-    -h $POSTGRES_HOST_TEST \
-    -U $POSTGRES_USER_TEST \
-    -c "DROP DATABASE IF EXISTS $POSTGRES_DB_TEST WITH (FORCE)"
-PGPASSWORD=$POSTGRES_PASSWORD_TEST psql \
-    -h $POSTGRES_HOST_TEST \
-    -U $POSTGRES_USER_TEST \
-    -c "CREATE DATABASE $POSTGRES_DB_TEST"
+PGPASSWORD=$POSTGRES_PASSWORD psql \
+    -h $POSTGRES_HOST \
+    -U $POSTGRES_USER \
+    -c "DROP DATABASE IF EXISTS $POSTGRES_DB WITH (FORCE)"
+PGPASSWORD=$POSTGRES_PASSWORD psql \
+    -h $POSTGRES_HOST \
+    -U $POSTGRES_USER \
+    -c "CREATE DATABASE $POSTGRES_DB"
 
 # apply all alembic migrations from the very beginning
 alembic upgrade head

@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: docker compose up --detach --build --wait
+      - run: cp .env.ci .env
+      - run: docker compose up --detach --build --wait api
       - run: docker compose exec api ./api/do-lint.sh
       - run: docker compose exec api ./api/do-test.sh
