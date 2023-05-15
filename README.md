@@ -18,13 +18,16 @@ Frontend repo - https://github.com/golubev/daily-rabbit-frontend.
 > ```sh
 > cp .env.example .env
 > ```
-> reviewed the values and changed were it was required.
+> and reviewed variables values in the `.env` file replacing `_CHANGE_THIS_` placeholders with appropriate values.
 
-## How to start with vscode
 
-The vscode's Dev Containers, a remote development feature, are being used in order to get fully-integrated IDE with application's dockerized Python environment. And to get a decent developer experience (DX).
+## How to start in vscode
 
-In order to run vscode inside the application's container do the following:
+The project was mainly configured to be developed in vscode. It is still available to be run simply with a CLI command without the vscode (see below).
+
+The vscode's Dev Containers feature is used in order to reach a full integration of the IDE with the application's dockerized Python environment. That gives a decent developer experience (DX) working with the application's source code: code completion, code navigation etc.
+
+In order to start the application and run vscode inside the application's container do the following:
 
 1. in vscode open the project's directory
 2. hit Ctrl+Shift+P
@@ -34,9 +37,9 @@ In order to run vscode inside the application's container do the following:
 
 ## How to start without vscode
 
-If the vscode is not an option for you, simply run:
+If you simply want to spin up the application or if the vscode is not an option for you, just run:
 ```
-docker compose up --detach --wait
+docker compose up --detach --build --wait
 ```
 
 
