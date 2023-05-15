@@ -19,11 +19,17 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         self.db_model_type = db_model_type
 
     def get(self, db: Session, id: int) -> DBModelType | None:
+        """
+        Get a model from the database by primary key.
+        """
         return db.query(self.db_model_type).get(id)
 
     def create(
         self, db: Session, data_to_create: CreateAPIModelType | dict[str, Any]
     ) -> DBModelType:
+        """
+        Create a new model instance persisted to the database.
+        """
         if not isinstance(data_to_create, dict):
             data_to_create = data_to_create.dict()
         db_model = self.db_model_type(**data_to_create)
@@ -38,6 +44,9 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         db_model: DBModelType,
         data_to_update: UpdateAPIModelType | dict[str, Any],
     ) -> None:
+        """
+        Update a model and persist changes to the database.
+        """
         if not isinstance(data_to_update, dict):
             data_to_update = data_to_update.dict()
         for field in data_to_update:
@@ -47,5 +56,8 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         db.refresh(db_model)
 
     def delete(self, db: Session, db_model: DBModelType) -> None:
+        """
+        Delete a model from the database.
+        """
         db.delete(db_model)
         db.commit()

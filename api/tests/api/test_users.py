@@ -24,7 +24,7 @@ def test_create_user_successful(
     assert response.status_code == status.HTTP_200_OK
 
     # assert user was correctly created in the DB
-    user_created = user_service.get_filtered_by(db, username=fake_user.username)
+    user_created = user_service.get_by_username(db, fake_user.username)
     assert user_created
     assert user_created.email == fake_user.email
     assert user_created.username == fake_user.username
@@ -115,7 +115,7 @@ def test_update_current_user_successful(
     assert response.status_code == status.HTTP_200_OK
 
     # assert user was correctly updated in the DB
-    user_updated = user_service.get_filtered_by(db, username=username_to_set)
+    user_updated = user_service.get_by_username(db, username_to_set)
     assert user_updated
     assert user_updated.full_name == full_name_to_set
 
@@ -179,7 +179,7 @@ def test_delete_current_user_successful(
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
     # assert user was deleted in the DB
-    user_still_exists = user_service.get_filtered_by(db, username=username_to_delete)
+    user_still_exists = user_service.get_by_username(db, username_to_delete)
     assert user_still_exists is None
 
 

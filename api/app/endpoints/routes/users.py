@@ -3,10 +3,6 @@ from sqlalchemy.orm import Session
 
 from app.endpoints.dependencies.auth import get_current_user
 from app.endpoints.dependencies.db import yield_session
-from app.endpoints.validators import (
-    validate_user_email_not_exists,
-    validate_user_username_not_exists,
-)
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.services import user_service
@@ -23,8 +19,6 @@ def create_user(
     """
     Register a new user.
     """
-    validate_user_email_not_exists(create_api_model.email, db)
-    validate_user_username_not_exists(create_api_model.username, db)
     user_db_model = user_service.create(db, create_api_model)
     return UserResponse.from_db_model(user_db_model)
 
@@ -50,8 +44,6 @@ def update_current_user(
     """
     Update current user's details.
     """
-    if update_api_model.username != current_user.username:
-        validate_user_username_not_exists(update_api_model.username, db)
     user_service.update(db, current_user, update_api_model)
     return UserResponse.from_db_model(current_user)
 

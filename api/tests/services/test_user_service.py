@@ -23,17 +23,11 @@ def test_get(db: Session) -> None:
     assert user.id == target_user.id
 
 
-@pytest.mark.parametrize(
-    "filter_kwargs",
-    [
-        {"username": "johnny.test.readonly"},
-        {"email": "test.readonly@doe.com"},
-    ],
-)
-def test_get_filtered_by(db: Session, filter_kwargs: dict[str, str]) -> None:
-    target_user = get_db_model_or_exception(db, User, **filter_kwargs)
+def test_get_by_username(db: Session) -> None:
+    target_user_username = "johnny.test.readonly"
+    target_user = get_db_model_or_exception(db, User, username=target_user_username)
 
-    user_filtered = user_service.get_filtered_by(db, **filter_kwargs)
+    user_filtered = user_service.get_by_username(db, target_user_username)
     assert user_filtered is not None
     assert user_filtered.id == target_user.id
 

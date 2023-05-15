@@ -50,9 +50,7 @@ def force_authenticate_user(
         def get_current_user_override(
             db_application_session: Session = Depends(yield_session),
         ) -> User | None:
-            return user_service.get_filtered_by(
-                db_application_session, username=username
-            )
+            return user_service.get_by_username(db_application_session, username)
 
         # user models are fetched from different sessions to avoid errors like
         # "Object '<User at ...>' already attached to session '...'"
