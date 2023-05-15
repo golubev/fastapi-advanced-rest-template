@@ -12,3 +12,8 @@ application.add_middleware(
     allow_headers=["*"],
 )
 application.include_router(api_router)
+
+
+@application.get("/ping", tags=["Healthcheck"])
+def ping() -> dict[str, str]:
+    return {"message": "pong"}
