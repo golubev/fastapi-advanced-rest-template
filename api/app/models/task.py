@@ -30,18 +30,20 @@ class Task(BaseDBModel):
             TaskStatusEnum,
             name="task_status_enum",
             values_callable=lambda enum_type: [member.value for member in enum_type],
-            nullable=False,
-            default=TaskStatusEnum.OPEN.value,
         ),
+        nullable=False,
+        default=TaskStatusEnum.OPEN,
+        server_default=TaskStatusEnum.OPEN.value,
     )
     visibility: TaskVisibilityEnum = Column(
         Enum(
             TaskVisibilityEnum,
             name="task_visibility_enum",
             values_callable=lambda enum_type: [member.value for member in enum_type],
-            nullable=False,
-            default=TaskVisibilityEnum.VISIBLE.value,
         ),
+        nullable=False,
+        default=TaskVisibilityEnum.VISIBLE,
+        server_default=TaskVisibilityEnum.VISIBLE.value,
     )
     resolve_time: datetime | None = Column(DateTime, nullable=True)
 

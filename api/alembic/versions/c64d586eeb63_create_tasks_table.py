@@ -1,8 +1,8 @@
 """create tasks table
 
-Revision ID: a55fe31fde28
+Revision ID: c64d586eeb63
 Revises: 5f02da3a2e06
-Create Date: 2023-05-15 10:34:28.885348
+Create Date: 2023-05-15 15:20:20.516831
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "a55fe31fde28"
+revision = "c64d586eeb63"
 down_revision = "5f02da3a2e06"
 branch_labels = None
 depends_on = None
@@ -30,12 +30,14 @@ def upgrade() -> None:
         sa.Column(
             "status",
             task_status_enum_type,
-            nullable=True,
+            server_default="open",
+            nullable=False,
         ),
         sa.Column(
             "visibility",
             task_visibility_enum_type,
-            nullable=True,
+            server_default="visible",
+            nullable=False,
         ),
         sa.Column("resolve_time", sa.DateTime(), nullable=True),
         sa.Column(
