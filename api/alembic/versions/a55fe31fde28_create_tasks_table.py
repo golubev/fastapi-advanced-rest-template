@@ -16,9 +16,7 @@ branch_labels = None
 depends_on = None
 
 task_status_enum_type = sa.Enum("open", "resolved", "overdue", name="task_status_enum")
-task_visibility_status_enum_type = sa.Enum(
-    "visible", "archived", name="task_visibility_status_enum"
-)
+task_visibility_enum_type = sa.Enum("visible", "archived", name="task_visibility_enum")
 
 
 def upgrade() -> None:
@@ -35,8 +33,8 @@ def upgrade() -> None:
             nullable=True,
         ),
         sa.Column(
-            "visibility_status",
-            task_visibility_status_enum_type,
+            "visibility",
+            task_visibility_enum_type,
             nullable=True,
         ),
         sa.Column("resolve_time", sa.DateTime(), nullable=True),
@@ -61,5 +59,5 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_tasks_user_id"), table_name="tasks")
     op.drop_table("tasks")
     task_status_enum_type.drop(op.get_bind())
-    task_visibility_status_enum_type.drop(op.get_bind())
+    task_visibility_enum_type.drop(op.get_bind())
     # ### end Alembic commands ###

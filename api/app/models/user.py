@@ -31,4 +31,4 @@ class User(BaseDBModel):
     )
 
     # relations
-    tasks: list[Task] = relationship("Task", back_populates="user")
+    tasks: list["Task"] = relationship("Task", back_populates="user")

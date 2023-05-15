@@ -1,16 +1,13 @@
 from datetime import datetime
-from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from app.enums import TaskStatusEnum, TaskVisibilityStatusEnum
+from app.enums import TaskStatusEnum, TaskVisibilityEnum
 
 from .base import BaseDBModel
-
-if TYPE_CHECKING:
-    from .user import User  # noqa: F401
+from .user import User
 
 
 class Task(BaseDBModel):
@@ -24,7 +21,7 @@ class Task(BaseDBModel):
         index=True,
         nullable=False,
     )
-    user: User = relationship("User", back_populates="tasks")
+    user: User = relationship(User, back_populates="tasks")
 
     subject: str = Column(String, nullable=False)
     deadline: datetime | None = Column(DateTime, nullable=True)
@@ -37,13 +34,13 @@ class Task(BaseDBModel):
             default=TaskStatusEnum.OPEN.value,
         ),
     )
-    visibility_status: TaskVisibilityStatusEnum = Column(
+    visibility: TaskVisibilityEnum = Column(
         Enum(
-            TaskVisibilityStatusEnum,
-            name="task_visibility_status_enum",
+            TaskVisibilityEnum,
+            name="task_visibility_enum",
             values_callable=lambda enum_type: [member.value for member in enum_type],
             nullable=False,
-            default=TaskVisibilityStatusEnum.VISIBLE.value,
+            default=TaskVisibilityEnum.VISIBLE.value,
         ),
     )
     resolve_time: datetime | None = Column(DateTime, nullable=True)
