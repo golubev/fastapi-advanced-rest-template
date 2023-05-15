@@ -29,9 +29,7 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
             return None
         return user
 
-    def create(
-        self, db: Session, *, data_to_create: UserCreate | dict[str, Any]
-    ) -> User:
+    def create(self, db: Session, data_to_create: UserCreate | dict[str, Any]) -> User:
         if isinstance(data_to_create, dict):
             data_to_create = UserCreate(**data_to_create)
         data_to_create_prepared = dict(
@@ -42,7 +40,7 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
                 data_to_create.password.get_secret_value()
             ),
         )
-        return super().create(db, data_to_create=data_to_create_prepared)
+        return super().create(db, data_to_create_prepared)
 
 
 user_service = UserService(User)

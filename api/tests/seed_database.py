@@ -45,6 +45,10 @@ users = [
         "full_name": "John Doe the Updater",
     },
     {
+        "username": "johnny.test.api.delete",
+        "full_name": "John Doe the GDPR lover",
+    },
+    {
         "username": "johnny.test.service.delete",
         "full_name": "John Doe the GDPR lover",
     },

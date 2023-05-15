@@ -77,7 +77,7 @@ def test_create(
     fake_user_password = session_faker.unique.password()
     fake_user = factories.user.make(session_faker, password=fake_user_password)
     data_to_create = schema_make_callable(fake_user, password=fake_user_password)
-    user_created = user_service.create(db, data_to_create=data_to_create)
+    user_created = user_service.create(db, data_to_create)
     assert inspect(user_created).persistent
     assert user_created.id is not None
     assert user_created.email == fake_user.email
@@ -112,7 +112,7 @@ def test_update(
 ) -> None:
     target_user = get_db_model_or_exception(db, User, username=username)
 
-    user_service.update(db, db_model=target_user, data_to_update=update_data)
+    user_service.update(db, target_user, update_data)
 
     updated_data_model: UserUpdate = (
         update_data
@@ -135,8 +135,7 @@ def test_delete(
     target_user_username = "johnny.test.service.delete"
 
     target_user = get_db_model_or_exception(db, User, username=target_user_username)
-    target_user_id: int = target_user.id  # type: ignore
-    user_service.delete(db, id=target_user_id)
+    user_service.delete(db, target_user)
     assert inspect(target_user).detached
 
     user_from_db = get_db_model(db, User, username=target_user_username)

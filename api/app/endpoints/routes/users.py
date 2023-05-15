@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
 from app.endpoints.dependencies.auth import get_current_user
@@ -25,7 +25,7 @@ def create_user(
     """
     validate_user_email_not_exists(create_api_model.email, db)
     validate_user_username_not_exists(create_api_model.username, db)
-    user_db_model = user_service.create(db, data_to_create=create_api_model)
+    user_db_model = user_service.create(db, create_api_model)
     return UserResponse.from_db_model(user_db_model)
 
 
@@ -52,5 +52,18 @@ def update_current_user(
     """
     if update_api_model.username != current_user.username:
         validate_user_username_not_exists(update_api_model.username, db)
-    user_service.update(db, db_model=current_user, data_to_update=update_api_model)
+    user_service.update(db, current_user, update_api_model)
     return UserResponse.from_db_model(current_user)
+
+
+@router.delete("/users/current-user")
+def delete_current_user(
+    *,
+    db: Session = Depends(yield_session),
+    current_user: User = Depends(get_current_user),
+) -> Response:
+    """
+    Update current user's details.
+    """
+    user_service.delete(db, current_user)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

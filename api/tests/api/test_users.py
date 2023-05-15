@@ -167,3 +167,22 @@ def test_update_current_user_invalid(
         json=fields_to_update,
     )
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
+def test_delete_current_user_successful(
+    client: TestClient, db: Session, force_authenticate_user: Callable[[str], User]
+) -> None:
+    username_to_delete = "johnny.test.api.delete"
+
+    force_authenticate_user(username_to_delete)
+    response = client.delete("/users/current-user")
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    # assert user was deleted in the DB
+    user_still_exists = user_service.get_filtered_by(db, username=username_to_delete)
+    assert user_still_exists is None
+
+
+def test_delete_current_user_unauthorized(client: TestClient) -> None:
+    response = client.delete("/users/current-user")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED

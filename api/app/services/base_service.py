@@ -22,7 +22,7 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         return db.query(self.db_model_type).get(id)
 
     def create(
-        self, db: Session, *, data_to_create: CreateAPIModelType | dict[str, Any]
+        self, db: Session, data_to_create: CreateAPIModelType | dict[str, Any]
     ) -> DBModelType:
         if not isinstance(data_to_create, dict):
             data_to_create = data_to_create.dict()
@@ -35,9 +35,8 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
     def update(
         self,
         db: Session,
-        *,
         db_model: DBModelType,
-        data_to_update: UpdateAPIModelType | dict[str, Any]
+        data_to_update: UpdateAPIModelType | dict[str, Any],
     ) -> None:
         if not isinstance(data_to_update, dict):
             data_to_update = data_to_update.dict()
@@ -47,8 +46,6 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         db.commit()
         db.refresh(db_model)
 
-    def delete(self, db: Session, *, id: int) -> None:
-        db_model = db.query(self.db_model_type).get(id)
-        if db_model:
-            db.delete(db_model)
-            db.commit()
+    def delete(self, db: Session, db_model: DBModelType) -> None:
+        db.delete(db_model)
+        db.commit()
