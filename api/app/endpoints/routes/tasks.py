@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.config import config
 from app.endpoints.dependencies.auth import get_current_user
 from app.endpoints.dependencies.db import yield_session
+from app.enums import TaskVisibilityEnum
 from app.models.user import User
 from app.schemas.task import TaskCreate, TaskResponse, TaskUpdate
 from app.services import task_service
@@ -30,6 +31,7 @@ def list_tasks(
     *,
     db: Session = Depends(yield_session),
     current_user: User = Depends(get_current_user),
+    visibility: TaskVisibilityEnum | None = None,
     offset: int = 0,
     limit: int = config.API_LIST_LIMIT_DEFAULT,
 ) -> list[TaskResponse]:
@@ -39,7 +41,11 @@ def list_tasks(
     return [
         TaskResponse.from_db_model(task)
         for task in task_service.list_by_user(
-            db, current_user, offset=offset, limit=limit
+            db,
+            current_user,
+            visibility=visibility,
+            offset=offset,
+            limit=limit,
         )
     ]
 

@@ -2,6 +2,7 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
+from app.enums import TaskVisibilityEnum
 from app.models import Task, User
 from app.schemas.task import TaskCreate, TaskUpdate
 
@@ -25,18 +26,21 @@ class TaskService(BaseService[Task, TaskCreate, TaskUpdate]):
         return self.create(db, data_to_create_prepared)
 
     def list_by_user(
-        self, db: Session, user: User, *, offset: int = 0, limit: int = 100
+        self,
+        db: Session,
+        user: User,
+        *,
+        visibility: TaskVisibilityEnum | None = None,
+        offset: int = 0,
+        limit: int = 100,
     ) -> list[Task]:
         """
         List user's tasks.
         """
-        return (
-            db.query(Task)
-            .filter(Task.user_id == user.id)
-            .offset(offset)
-            .limit(limit)
-            .all()
-        )
+        query = db.query(Task).filter(Task.user_id == user.id)
+        if visibility is not None:
+            query = query.filter(Task.visibility == visibility)
+        return query.offset(offset).limit(limit).all()
 
     def update_for_user(
         self,
