@@ -16,6 +16,12 @@ Creates a new alembic revision (migration) according to diff in the models' sour
 alembic revision --autogenerate -m "create users table"
 ```
 
+### Rollback the last applied revision
+
+```
+alembic downgrade -1
+```
+
 
 ## Codestyle and code static analysis
 

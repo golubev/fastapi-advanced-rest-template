@@ -1,9 +1,14 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from .base import BaseDBModel
+
+if TYPE_CHECKING:
+    from .task import Task  # noqa: F401
 
 
 class User(BaseDBModel):
@@ -24,3 +29,6 @@ class User(BaseDBModel):
     update_time: datetime | None = Column(
         DateTime, nullable=True, default=None, onupdate=func.now()
     )
+
+    # relations
+    tasks: list[Task] = relationship("Task", back_populates="user")
