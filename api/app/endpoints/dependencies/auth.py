@@ -20,9 +20,4 @@ def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Could not validate credentials",
         )
-    user = user_service.get(db, id=int(token_payload.sub))
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
-    return user
+    return user_service.get_or_exception(db, id=int(token_payload.sub))

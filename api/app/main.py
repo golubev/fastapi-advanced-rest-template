@@ -7,6 +7,7 @@ from app.services.exceptions import (
     AccessViolationException,
     BaseServiceException,
     BaseServiceValidationException,
+    NotFoundException,
     UniqueConstraintViolationException,
 )
 
@@ -27,6 +28,7 @@ def ping() -> dict[str, str]:
 
 
 service_exceptions_to_status_codes = {
+    NotFoundException: status.HTTP_404_NOT_FOUND,
     UniqueConstraintViolationException: status.HTTP_409_CONFLICT,
     BaseServiceValidationException: status.HTTP_422_UNPROCESSABLE_ENTITY,
     AccessViolationException: status.HTTP_403_FORBIDDEN,

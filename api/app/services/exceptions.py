@@ -7,6 +7,12 @@ class BaseServiceException(Exception):
         self.message = message
 
 
+class NotFoundException(BaseServiceException):
+    """
+    Exception raised when a model is not found in the database.
+    """
+
+
 class BaseServiceValidationException(BaseServiceException):
     """
     Base class for any validation exception raised from a service.

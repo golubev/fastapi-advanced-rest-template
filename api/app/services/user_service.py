@@ -6,8 +6,9 @@ from sqlalchemy.sql import exists
 from app.core.security import get_password_hash, verify_password
 from app.models import User
 from app.schemas.user import UserCreate, UserUpdate
-from app.services.base_service import BaseService
-from app.services.exceptions import UniqueConstraintViolationException
+
+from .base_service import BaseService
+from .exceptions import UniqueConstraintViolationException
 
 
 class UserService(BaseService[User, UserCreate, UserUpdate]):

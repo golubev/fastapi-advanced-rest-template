@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from app.models import BaseDBModel
 from app.schemas.base import BaseAPIModel
 
+from .exceptions import NotFoundException
+
 DBModelType = TypeVar("DBModelType", bound=BaseDBModel)
 CreateAPIModelType = TypeVar("CreateAPIModelType", bound=BaseAPIModel)
 UpdateAPIModelType = TypeVar("UpdateAPIModelType", bound=BaseAPIModel)
@@ -23,6 +25,15 @@ class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
         Get a model from the database by primary key.
         """
         return db.query(self.db_model_type).get(id)
+
+    def get_or_exception(self, db: Session, id: int) -> DBModelType:
+        """
+        Get a model from the database by primary key. Raise exception if not found.
+        """
+        db_model = self.get(db, id)
+        if db_model is None:
+            raise NotFoundException(f"`{self.db_model_type.__name__}` not found.")
+        return db_model
 
     def create(
         self, db: Session, data_to_create: CreateAPIModelType | dict[str, Any]
