@@ -61,8 +61,8 @@ def update_task(
     """
     Update current user's details.
     """
-    task = task_service.get_or_exception(db, task_id)
-    task_service.update_for_user(db, task, update_api_model, user=current_user)
+    task = task_service.get_for_user_or_exception(db, task_id, current_user)
+    task_service.update(db, task, update_api_model)
     return TaskResponse.from_db_model(task)
 
 
@@ -76,6 +76,6 @@ def delete_task(
     """
     Update current user's details.
     """
-    task = task_service.get_or_exception(db, task_id)
-    task_service.delete_for_user(db, task, user=current_user)
+    task = task_service.get_for_user_or_exception(db, task_id, current_user)
+    task_service.delete(db, task)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

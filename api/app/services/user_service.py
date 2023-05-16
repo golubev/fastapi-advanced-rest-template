@@ -1,5 +1,3 @@
-from typing import Any
-
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import exists
 
@@ -11,11 +9,17 @@ from .base_service import BaseService
 from .exceptions import UniqueConstraintViolationException
 
 
-class UserService(BaseService[User, UserCreate, UserUpdate]):
+class UserService(BaseService[User]):
+    def get(self, db: Session, id: int) -> User | None:
+        return self._get(db, id)
+
+    def get_or_exception(self, db: Session, id: int) -> User:
+        """
+        Get a User by id. Raise exception if not found.
+        """
+        return self._get_or_exception(db, id)
+
     def get_by_username(self, db: Session, username: str) -> User | None:
-        """
-        Get users filter by fields' values passed in the keyword arguments.
-        """
         return db.query(User).filter(User.username == username).first()
 
     def get_by_credentials_verified(
@@ -31,36 +35,30 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
             return None
         return user
 
-    def create(self, db: Session, data_to_create: UserCreate | dict[str, Any]) -> User:
-        """
-        Create a new user.
-        """
-        if isinstance(data_to_create, dict):
-            data_to_create = UserCreate(**data_to_create)
-        self._validate_email_unique(db, data_to_create.email)
-        self._validate_username_unique(db, data_to_create.username)
+    def create(self, db: Session, create_api_model: UserCreate) -> User:
+        self._validate_email_unique(db, create_api_model.email)
+        self._validate_username_unique(db, create_api_model.username)
         data_to_create_prepared = dict(
-            **data_to_create.dict(exclude={"password"}),
+            **create_api_model.dict(exclude={"password"}),
             hashed_password=get_password_hash(
-                data_to_create.password.get_secret_value()
+                create_api_model.password.get_secret_value()
             ),
         )
-        return super().create(db, data_to_create_prepared)
+        return self._create(db, data_to_create_prepared)
 
     def update(
         self,
         db: Session,
         db_model: User,
-        data_to_update: UserUpdate | dict[str, Any],
+        update_api_model: UserUpdate,
     ) -> None:
-        """
-        Update a user.
-        """
-        if isinstance(data_to_update, dict):
-            data_to_update = UserUpdate(**data_to_update)
-        if data_to_update.username != db_model.username:
-            self._validate_username_unique(db, data_to_update.username)
-        return super().update(db, db_model, data_to_update)
+        if update_api_model.username != db_model.username:
+            self._validate_username_unique(db, update_api_model.username)
+        data_to_update_prepared = update_api_model.dict()
+        self._update(db, db_model, data_to_update_prepared)
+
+    def delete(self, db: Session, db_model: User) -> None:
+        self._delete(db, db_model)
 
     def _validate_email_unique(self, db: Session, email: str) -> None:
         if db.query(exists().where(User.email == email)).scalar():

@@ -29,7 +29,7 @@ def read_current_user(
     current_user: User = Depends(get_current_user),
 ) -> UserResponse:
     """
-    Get current user.
+    Get the current user's details.
     """
     return UserResponse.from_db_model(current_user)
 
@@ -42,7 +42,7 @@ def update_current_user(
     update_api_model: UserUpdate,
 ) -> UserResponse:
     """
-    Update current user's details.
+    Update the current user's details.
     """
     user_service.update(db, current_user, update_api_model)
     return UserResponse.from_db_model(current_user)
@@ -55,7 +55,7 @@ def delete_current_user(
     current_user: User = Depends(get_current_user),
 ) -> Response:
     """
-    Update current user's details.
+    Delete the current user.
     """
     user_service.delete(db, current_user)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -37,11 +37,7 @@ users = [
         "username": "johnny.test.api.update.bad",
     },
     {
-        "username": "johnny.test.service.update_model",
-        "full_name": "John Doe the Updater",
-    },
-    {
-        "username": "johnny.test.service.update_dict",
+        "username": "johnny.test.service.update",
         "full_name": "John Doe the Updater",
     },
     {

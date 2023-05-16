@@ -3,70 +3,64 @@ from typing import Any, Generic, Type, TypeVar
 from sqlalchemy.orm import Session
 
 from app.models import BaseDBModel
-from app.schemas.base import BaseAPIModel
 
 from .exceptions import NotFoundException
 
 DBModelType = TypeVar("DBModelType", bound=BaseDBModel)
-CreateAPIModelType = TypeVar("CreateAPIModelType", bound=BaseAPIModel)
-UpdateAPIModelType = TypeVar("UpdateAPIModelType", bound=BaseAPIModel)
 
 
-class BaseService(Generic[DBModelType, CreateAPIModelType, UpdateAPIModelType]):
+class BaseService(Generic[DBModelType]):
     def __init__(self, db_model_type: Type[DBModelType]):
         """
-        A service object with default methods to create, read, update and
-        delete (CRUD) models.
+        Base class for services. Contains basic low-level DB operations.
+
+        All methods here were intentionally made private in order to explicitly
+        declare APIs in derived classes. The main intention was to make a more
+        robust and less error-prone design.
         """
         self.db_model_type = db_model_type
 
-    def get(self, db: Session, id: int) -> DBModelType | None:
+    def _get(self, db: Session, id: int) -> DBModelType | None:
         """
-        Get a model from the database by primary key.
+        Get a model from the database by the primary key.
         """
         return db.query(self.db_model_type).get(id)
 
-    def get_or_exception(self, db: Session, id: int) -> DBModelType:
+    def _get_or_exception(self, db: Session, id: int) -> DBModelType:
         """
-        Get a model from the database by primary key. Raise exception if not found.
+        Get a model from the database by the primary key. Raise exception if not found.
         """
-        db_model = self.get(db, id)
+        db_model = self._get(db, id)
         if db_model is None:
             raise NotFoundException(f"`{self.db_model_type.__name__}` not found.")
         return db_model
 
-    def create(
-        self, db: Session, data_to_create: CreateAPIModelType | dict[str, Any]
-    ) -> DBModelType:
+    def _create(self, db: Session, data_to_create: dict[str, Any]) -> DBModelType:
         """
-        Create a new model instance persisted to the database.
+        Create a new model instance and persist it to the database.
         """
-        if not isinstance(data_to_create, dict):
-            data_to_create = data_to_create.dict()
         db_model = self.db_model_type(**data_to_create)
         db.add(db_model)
         db.commit()
         db.refresh(db_model)
         return db_model
 
-    def update(
+    def _update(
         self,
         db: Session,
         db_model: DBModelType,
-        data_to_update: UpdateAPIModelType | dict[str, Any],
+        data_to_update: dict[str, Any],
     ) -> None:
         """
         Update a model and persist changes to the database.
         """
-        if not isinstance(data_to_update, dict):
-            data_to_update = data_to_update.dict()
         for field in data_to_update:
             setattr(db_model, field, data_to_update[field])
         db.add(db_model)
         db.commit()
         db.refresh(db_model)
 
-    def delete(self, db: Session, db_model: DBModelType) -> None:
+    def _delete(self, db: Session, db_model: DBModelType) -> None:
         """
         Delete a model from the database.
         """

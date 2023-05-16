@@ -1,5 +1,3 @@
-from typing import Any, Callable
-
 import pytest
 from faker import Faker
 from sqlalchemy import inspect
@@ -11,7 +9,6 @@ from app.schemas.user import UserCreate, UserUpdate
 from app.services import user_service
 from tests import factories
 from tests.common import get_db_model, get_db_model_or_exception
-from tests.schemas.user import make_user_create_dict
 
 
 def test_get(db: Session) -> None:
@@ -56,22 +53,12 @@ def test_get_by_credentials_verified(
     assert user.id == target_user.id
 
 
-@pytest.mark.parametrize(
-    "schema_make_callable",
-    [
-        UserCreate.from_db_model,
-        make_user_create_dict,
-    ],
-)
-def test_create(
-    db: Session,
-    session_faker: Faker,
-    schema_make_callable: Callable[..., UserCreate] | Callable[..., dict[str, Any]],
-) -> None:
+def test_create(db: Session, session_faker: Faker) -> None:
     fake_user_password = session_faker.unique.password()
     fake_user = factories.user.make(session_faker, password=fake_user_password)
-    data_to_create = schema_make_callable(fake_user, password=fake_user_password)
-    user_created = user_service.create(db, data_to_create)
+    create_api_model = UserCreate.from_db_model(fake_user, password=fake_user_password)
+
+    user_created = user_service.create(db, create_api_model)
     assert inspect(user_created).persistent
     assert user_created.id is not None
     assert user_created.email == fake_user.email
@@ -80,47 +67,24 @@ def test_create(
     assert verify_password(fake_user_password, user_created.hashed_password)
 
 
-@pytest.mark.parametrize(
-    "username, update_data",
-    [
-        (
-            "johnny.test.service.update_model",
-            UserUpdate(
-                username="johnny.updated_via_service_model",
-                full_name="Giovanni Giorgio",
-            ),
-        ),
-        (
-            "johnny.test.service.update_dict",
-            {
-                "username": "johnny.updated_via_service_dict",
-                "full_name": "Giovanni Giorgio",
-            },
-        ),
-    ],
-)
-def test_update(
-    db: Session,
-    username: str,
-    update_data: UserUpdate | dict[str, str],
-) -> None:
-    target_user = get_db_model_or_exception(db, User, username=username)
-
-    user_service.update(db, target_user, update_data)
-
-    updated_data_model: UserUpdate = (
-        update_data
-        if isinstance(update_data, UserUpdate)
-        else UserUpdate(**update_data)
+def test_update(db: Session) -> None:
+    target_user_username = "johnny.test.service.update"
+    update_api_model = UserUpdate(
+        username="johnny.but.everybody.calls.me.giorgio",
+        full_name="Giovanni Giorgio",
     )
+    target_user = get_db_model_or_exception(db, User, username=target_user_username)
+
+    user_service.update(db, target_user, update_api_model)
+
     # assert the model had been updated
-    assert target_user.username == updated_data_model.username
-    assert target_user.full_name == updated_data_model.full_name
+    assert target_user.username == update_api_model.username
+    assert target_user.full_name == update_api_model.full_name
 
     # assert the changes have been persisted
-    user_from_db = get_db_model(db, User, username=updated_data_model.username)
+    user_from_db = get_db_model(db, User, username=update_api_model.username)
     assert user_from_db is not None
-    assert user_from_db.full_name == updated_data_model.full_name
+    assert user_from_db.full_name == update_api_model.full_name
 
 
 def test_delete(
