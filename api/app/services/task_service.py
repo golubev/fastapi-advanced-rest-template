@@ -1,11 +1,13 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
-from app.enums import TaskVisibilityEnum
+from app.enums import TaskStatusEnum, TaskVisibilityEnum
 from app.models import Task, User
 from app.schemas.task import TaskCreate, TaskUpdate
 
 from .base_service import BaseService
-from .exceptions import OwnerAccessViolationException
+from .exceptions import OwnerAccessViolationException, ValidationException
 
 
 class TaskService(BaseService[Task]):
@@ -60,6 +62,12 @@ class TaskService(BaseService[Task]):
         db_model: Task,
         update_api_model: TaskUpdate,
     ) -> None:
+        if db_model.status == TaskStatusEnum.OPEN:
+            if (
+                update_api_model.deadline is not None
+                and update_api_model.deadline < datetime.now()
+            ):
+                raise ValidationException("deadline can not be set in the past")
         data_to_update_prepared = update_api_model.dict()
         self._update(db, db_model, data_to_update_prepared)
 

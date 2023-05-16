@@ -13,13 +13,13 @@ class NotFoundException(BaseServiceException):
     """
 
 
-class BaseServiceValidationException(BaseServiceException):
+class ValidationException(BaseServiceException):
     """
-    Base class for any validation exception raised from a service.
+    Raised when input data is not valid.
     """
 
 
-class UniqueConstraintViolationException(BaseServiceValidationException):
+class UniqueConstraintViolationException(ValidationException):
     """
     Raised when a value violates a unique constraint violation.
     """

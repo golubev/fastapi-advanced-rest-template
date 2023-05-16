@@ -53,4 +53,9 @@ docker compose exec api alembic upgrade head
 
 ## OpenAPI docs
 
-Navigate to http://localhost:8000/docs
+Navigate to http://localhost:8000/docs.
+
+
+## Day-to-day tasks cheat sheet
+
+Navigate to [`api/README.md`](./api/README.md) to see frequently used commands cheat sheet.

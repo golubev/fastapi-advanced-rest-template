@@ -6,9 +6,9 @@ from app.core.exceptions import AccessTokenMalformedException, BaseApplicationEx
 from app.endpoints.api_router import api_router
 from app.services.exceptions import (
     AccessViolationException,
-    BaseServiceValidationException,
     NotFoundException,
     UniqueConstraintViolationException,
+    ValidationException,
 )
 
 application = FastAPI()
@@ -41,7 +41,7 @@ exceptions_to_http_status_codes = {
     # app.services exceptions
     NotFoundException: status.HTTP_404_NOT_FOUND,
     UniqueConstraintViolationException: status.HTTP_409_CONFLICT,
-    BaseServiceValidationException: status.HTTP_422_UNPROCESSABLE_ENTITY,
+    ValidationException: status.HTTP_422_UNPROCESSABLE_ENTITY,
     AccessViolationException: status.HTTP_403_FORBIDDEN,
     # app.core exceptions
     AccessTokenMalformedException: status.HTTP_401_UNAUTHORIZED,
