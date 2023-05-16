@@ -1,3 +1,4 @@
+import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
 
@@ -15,6 +16,27 @@ def test_get_access_token(client: TestClient) -> None:
     response_payload = response.json()
     assert "access_token" in response_payload
     assert response_payload["access_token"]
+
+
+@pytest.mark.parametrize(
+    "wrong_credentials",
+    [
+        {
+            "username": "johnny.test.login",
+            "password": "johnny_tries_a_wrong_password",
+        },
+        {
+            "username": "joe.the.elusive",
+            "password": "johnnies@password123",
+        },
+    ],
+)
+def test_get_access_token_wrong_credentials(
+    client: TestClient, wrong_credentials: dict[str, str]
+) -> None:
+    response = client.post("/login/access-token", data=wrong_credentials)
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 def test_authorization_flow(client: TestClient) -> None:
@@ -42,7 +64,15 @@ def test_authorization_flow(client: TestClient) -> None:
     assert who_am_i_payload["username"] == TEST_USER_LOGIN_DATA["username"]
 
 
-def test_not_unauthorized(client: TestClient) -> None:
+def test_authorization_header_not_passed(client: TestClient) -> None:
     who_am_i_response = client.get("/login/who-am-i")
+
+    assert who_am_i_response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_authorization_header_malformed(client: TestClient) -> None:
+    authorization_headers = {"Authorization": "Bearer malformed_auth_token"}
+
+    who_am_i_response = client.get("/login/who-am-i", headers=authorization_headers)
 
     assert who_am_i_response.status_code == status.HTTP_401_UNAUTHORIZED
