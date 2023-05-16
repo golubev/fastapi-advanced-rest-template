@@ -7,15 +7,12 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 
 from app.config import config
+from app.core.exceptions import AccessTokenMalformedException
 
 crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 ALGORITHM = "HS256"
-
-
-class AccessTokenException(Exception):
-    pass
 
 
 class AccessTokenPayload(BaseModel):
@@ -30,7 +27,7 @@ class AccessTokenPayload(BaseModel):
             )
             return cls(**payload)
         except (JWTError, ValidationError):
-            raise AccessTokenException()
+            raise AccessTokenMalformedException("Could not validate credentials")
 
     def encode_to_access_token(self) -> str:
         return jwt.encode(

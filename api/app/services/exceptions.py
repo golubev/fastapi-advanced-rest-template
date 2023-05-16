@@ -1,15 +1,15 @@
-class BaseServiceException(Exception):
+from app.core.exceptions import BaseApplicationException
+
+
+class BaseServiceException(BaseApplicationException):
     """
     Base class for any exception raised from a service.
     """
 
-    def __init__(self, message: str) -> None:
-        self.message = message
-
 
 class NotFoundException(BaseServiceException):
     """
-    Exception raised when a model is not found in the database.
+    Raised when a model is not found in the database.
     """
 
 
@@ -21,7 +21,7 @@ class BaseServiceValidationException(BaseServiceException):
 
 class UniqueConstraintViolationException(BaseServiceValidationException):
     """
-    Exception raised when a value violates a unique constraint violation.
+    Raised when a value violates a unique constraint violation.
     """
 
 
@@ -33,6 +33,6 @@ class AccessViolationException(BaseServiceException):
 
 class OwnerAccessViolationException(AccessViolationException):
     """
-    Exception raised when a user is forbidden to interact with an entity which he
+    Raised when a user is forbidden to interact with an entity which he
     doesn't own.
     """
