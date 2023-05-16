@@ -32,12 +32,22 @@ In order to start the application and run vscode inside the application's contai
 3. paste `remote-containers.reopenInContainer`
 4. hit Enter
 
+After application starts apply database migrations to initialize the database:
+```
+alembic upgrade head
+```
+
 
 ## How to start without vscode
 
 If you simply want to spin up the application or if the vscode is not an option for you, just run:
 ```
 docker compose up --detach --build --wait
+```
+
+After application starts apply database migrations to initialize the database:
+```
+docker compose exec api alembic upgrade head
 ```
 
 
