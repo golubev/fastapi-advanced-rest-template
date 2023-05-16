@@ -9,6 +9,7 @@ TEST_USER_LOGIN_DATA = {
 
 def test_get_access_token(client: TestClient) -> None:
     response = client.post("/login/access-token", data=TEST_USER_LOGIN_DATA)
+
     assert response.status_code == status.HTTP_200_OK
 
     response_payload = response.json()
@@ -21,16 +22,19 @@ def test_authorization_flow(client: TestClient) -> None:
     access_token_response = client.post(
         "/login/access-token", data=TEST_USER_LOGIN_DATA
     )
+
     assert access_token_response.status_code == status.HTTP_200_OK
 
     access_token_payload = access_token_response.json()
     assert "access_token" in access_token_payload
 
-    # authorize with the access token received
     authorization_headers = {
         "Authorization": f"Bearer {access_token_payload['access_token']}"
     }
+
+    # authorize with the access token received
     who_am_i_response = client.get("/login/who-am-i", headers=authorization_headers)
+
     assert who_am_i_response.status_code == status.HTTP_200_OK
 
     who_am_i_payload = who_am_i_response.json()
@@ -40,4 +44,5 @@ def test_authorization_flow(client: TestClient) -> None:
 
 def test_not_unauthorized(client: TestClient) -> None:
     who_am_i_response = client.get("/login/who-am-i")
+
     assert who_am_i_response.status_code == status.HTTP_401_UNAUTHORIZED
