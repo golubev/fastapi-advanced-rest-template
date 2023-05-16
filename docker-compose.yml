@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   api:
-    container_name: daily_rabbit_api
+    container_name: todo_api
     build:
       context: ./api
       dockerfile: Dockerfile.dev
@@ -32,7 +32,7 @@ services:
     volumes:
       - .:/workspace:rw
     networks:
-      - daily_rabbit_network
+      - todo_network
     ports:
       - "8000:8000"
     restart: always
@@ -51,7 +51,7 @@ services:
 
   postgres:
     image: postgres:15.2-alpine
-    container_name: daily_rabbit_postgres
+    container_name: todo_postgres
     command:
       [
         "postgres",
@@ -71,9 +71,9 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
     volumes:
-      - daily_rabbit_postgres_volume:/var/lib/postgresql/data:rw
+      - todo_postgres_volume:/var/lib/postgresql/data:rw
     networks:
-      - daily_rabbit_network
+      - todo_network
     ports:
       - "5555:5432"
     restart: always
@@ -85,22 +85,22 @@ services:
 
   postgres_test:
     image: postgres:15.2-alpine
-    container_name: daily_rabbit_postgres_test
+    container_name: todo_postgres_test
     environment:
       - POSTGRES_DB=test_database
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test_password
     networks:
-      - daily_rabbit_network
+      - todo_network
     ports:
       - "5556:5432"
 
 networks:
-  daily_rabbit_network:
-    name: daily_rabbit_network
+  todo_network:
+    name: todo_network
     driver: bridge
 
 volumes:
-  daily_rabbit_postgres_volume:
-    name: daily_rabbit_postgres_volume
+  todo_postgres_volume:
+    name: todo_postgres_volume
     driver: local

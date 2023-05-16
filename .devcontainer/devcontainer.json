@@ -1,5 +1,5 @@
 {
-	"name": "Daily Rabbit API",
+	"name": "fastapi-todo-rest",
 	"dockerComposeFile": [
 		"../docker-compose.yml"
 	],

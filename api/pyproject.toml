@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "daily-rabbit-api"
+name = "fastapi-todo-rest"
 version = "0.1.0"
 description = ""
 authors = ["golubev <951364+golubev@users.noreply.github.com>"]

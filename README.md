@@ -1,9 +1,7 @@
-# daily-rabbit-api
+# fastapi-todo-rest
 
 
-API backend for the brand new daily activities logging web application.
-
-Frontend repo - https://github.com/golubev/daily-rabbit-frontend.
+REST API backend for a TODO application. Inspired by [tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql).
 
 
 ## Prerequisites (dependencies)
