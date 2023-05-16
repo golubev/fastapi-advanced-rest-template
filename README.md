@@ -1,7 +1,7 @@
 # fastapi-todo-rest
 
 
-REST API backend for a TODO application. Inspired by [tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql).
+REST API backend for a TODO application. Inspired by [tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql) and [testdrivenio/fastapi-react](https://github.com/testdrivenio/fastapi-react).
 
 
 ## Prerequisites (dependencies)
