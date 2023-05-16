@@ -14,6 +14,6 @@ jobs:
           export DOCKER_USER_GID=$(id -g)
           docker compose up --detach --build --wait api
       - name: Run code quality static analysis tools
-        run: docker compose exec api ./api/do-lint.sh
+        run: docker compose exec api ./do-lint.sh
       - name: Run tests
-        run: docker compose exec api ./api/do-test.sh
+        run: docker compose exec api ./do-test.sh

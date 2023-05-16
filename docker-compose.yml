@@ -12,7 +12,7 @@ services:
     command:
       [
         "uvicorn",
-        "api.app.main:application",
+        "app.main:application",
         "--reload",
         "--host",
         "0.0.0.0",
@@ -28,7 +28,7 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
-    working_dir: /workspace
+    working_dir: /workspace/api
     volumes:
       - .:/workspace:rw
     networks:
