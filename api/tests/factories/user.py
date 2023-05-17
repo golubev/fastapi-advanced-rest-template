@@ -12,6 +12,13 @@ def make(
     full_name: str | None = None,
     password: str | None = None,
 ) -> User:
+    """
+    Make a new fake `User` DB model without persisting it.
+
+    To set a specific value into any field of the model simply pass that value to a
+    corresponding keyword argument. If for an argument the default `None` is passed
+    than a fake value will be generated.
+    """
     if username is None:
         username = faker.unique.user_name()
     if email is None:

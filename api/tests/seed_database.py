@@ -1,10 +1,11 @@
+from datetime import datetime
 from random import randint
 from typing import Any
 
 from faker import Faker
 
 from app.core.db import get_session
-from app.models import Task
+from app.enums import TaskStatusEnum, TaskVisibilityEnum
 from tests import factories
 from tests.conftest import FAKER_LOCALES
 
@@ -61,19 +62,15 @@ tasks: list[dict[str, Any]] = [
         "tasks": [
             {
                 "subject": "task for get_for_user",
-                "deadline": None,
             },
             {
                 "subject": "task for get_for_user_or_exception",
-                "deadline": None,
             },
             {
                 "subject": "task for update via service setting a past deadline",
-                "deadline": None,
             },
             {
                 "subject": "task for delete via service",
-                "deadline": None,
             },
         ],
     },
@@ -85,33 +82,26 @@ tasks: list[dict[str, Any]] = [
         "tasks": [
             {
                 "subject": "a task",
-                "deadline": None,
-                "status": "open",
-                "visibility": "visible",
             },
             {
                 "subject": "resolved task",
-                "deadline": None,
-                "status": "resolved",
-                "visibility": "visible",
+                "status": TaskStatusEnum.RESOLVED,
+                "resolve_time": datetime(2023, 3, 15, 16, 30),
             },
             {
                 "subject": "archived task",
-                "deadline": None,
-                "status": "open",
-                "visibility": "archived",
+                "visibility": TaskVisibilityEnum.ARCHIVED,
             },
             {
                 "subject": "resolved archived task",
-                "deadline": None,
-                "status": "resolved",
-                "visibility": "archived",
+                "status": TaskStatusEnum.RESOLVED,
+                "visibility": TaskVisibilityEnum.ARCHIVED,
             },
             {
                 "subject": "overdue archived task",
-                "deadline": "2022-01-01T00:00:00",
-                "status": "overdue",
-                "visibility": "archived",
+                "deadline": datetime(2022, 1, 1),
+                "status": TaskStatusEnum.OVERDUE,
+                "visibility": TaskVisibilityEnum.ARCHIVED,
             },
         ],
     },
@@ -129,19 +119,17 @@ print("# seeding database with test data")
 with get_session() as db:
     for user_data in users:
         user_model = factories.user.make(faker, **user_data)
-        db.add(user_model)
-        db.commit()
+        factories.persist(db, user_model)
 
     for tasks_with_user_data in tasks:
         task_user_model = factories.user.make(faker, **tasks_with_user_data["user"])
-        db.add(task_user_model)
-        db.commit()
-        db.refresh(task_user_model)
-        task_user_id = task_user_model.id
+        factories.persist(db, task_user_model)
         for task_data in tasks_with_user_data["tasks"]:
-            task_data["user_id"] = task_user_id
-            task_model = Task(**task_data)
-            db.add(task_model)
-            db.commit()
+            task_model = factories.task.make(
+                faker,
+                user=task_user_model,
+                **task_data,
+            )
+            factories.persist(db, task_model)
 
 print("# successfully seeded database")

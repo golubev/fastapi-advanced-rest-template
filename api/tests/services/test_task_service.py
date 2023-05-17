@@ -12,6 +12,7 @@ from app.services.exceptions import (
     OwnerAccessViolationException,
     ValidationException,
 )
+from tests import factories
 from tests.common import get_db_model, get_db_model_or_exception
 
 
@@ -147,14 +148,12 @@ def test_update(
 ) -> None:
     user_owner_username = "johnny.multitasker"
     user_owner = get_db_model_or_exception(db, User, username=user_owner_username)
-    user_owner_id: int = user_owner.id  # type: ignore
-    target_task = Task(
-        user_id=user_owner_id,
+    target_task = factories.task.make(
+        session_faker,
+        user=user_owner,
         subject="task for update via service",
-        deadline=None,
     )
-    db.add(target_task)
-    db.commit()
+    factories.persist(db, target_task)
 
     visibility_to_set = (
         TaskVisibilityEnum.VISIBLE if do_make_visible else TaskVisibilityEnum.ARCHIVED
