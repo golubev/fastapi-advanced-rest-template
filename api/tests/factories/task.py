@@ -27,7 +27,7 @@ def make(
     :param resolve_time: `Task.resolve_time` to set. Is not faked
     """
     if subject is None:
-        subject = faker.unique.text(max_nb_chars=160)
+        subject = faker.unique.text(max_nb_chars=80)
     # if isinstance(deadline, bool) and deadline:
     #     deadline = faker.future_datetime()
     if visibility is None:

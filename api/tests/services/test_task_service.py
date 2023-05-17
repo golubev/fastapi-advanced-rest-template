@@ -16,8 +16,13 @@ from tests import factories
 from tests.common import get_db_model, get_db_model_or_exception
 
 
-def test_get_for_user(db: Session) -> None:
-    target_task = get_db_model_or_exception(db, Task, subject="task for get_for_user")
+def test_get_for_user(db: Session, session_faker: Faker) -> None:
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject="task for get_for_user",
+    )
     target_task_id: int = target_task.id  # type: ignore
     target_task_user: User = target_task.user
 
@@ -27,8 +32,13 @@ def test_get_for_user(db: Session) -> None:
     assert task.id == target_task.id
 
 
-def test_get_for_user_not_owner(db: Session) -> None:
-    target_task = get_db_model_or_exception(db, Task, subject="task for get_for_user")
+def test_get_for_user_not_owner(db: Session, session_faker: Faker) -> None:
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject="task for get_for_user if user is not an owner",
+    )
     target_task_id: int = target_task.id  # type: ignore
     user_not_owner = get_db_model_or_exception(
         db, User, username="jane.without.any.tasks"
@@ -47,9 +57,12 @@ def test_get_for_user_not_found(db: Session) -> None:
     assert task_found is None
 
 
-def test_get_for_user_or_exception(db: Session) -> None:
-    target_task = get_db_model_or_exception(
-        db, Task, subject="task for get_for_user_or_exception"
+def test_get_for_user_or_exception(db: Session, session_faker: Faker) -> None:
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject="task for get_for_user_or_exception",
     )
     target_task_id: int = target_task.id  # type: ignore
     target_task_user: User = target_task.user
@@ -60,9 +73,12 @@ def test_get_for_user_or_exception(db: Session) -> None:
     assert task.id == target_task.id
 
 
-def test_get_for_user_or_exception_not_owner(db: Session) -> None:
-    target_task = get_db_model_or_exception(
-        db, Task, subject="task for get_for_user_or_exception"
+def test_get_for_user_or_exception_not_owner(db: Session, session_faker: Faker) -> None:
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject="task for get_for_user_or_exception if user is not an owner",
     )
     target_task_id: int = target_task.id  # type: ignore
     user_not_owner = get_db_model_or_exception(
@@ -92,7 +108,7 @@ def test_get_for_user_or_exception_not_found(db: Session) -> None:
 def test_list_for_user(
     db: Session, visibility_filter: TaskVisibilityEnum | None, expected_count: int
 ) -> None:
-    target_user_username = "jane.with.some.tasks"
+    target_user_username = "jane.with.some.tasks.to.list"
     target_user = get_db_model_or_exception(db, User, username=target_user_username)
 
     tasks_listed = task_service.list_by_user(
@@ -112,7 +128,7 @@ def test_list_for_user(
 def test_create_for_user(db: Session, session_faker: Faker, has_deadline: bool) -> None:
     user_owner_username = "johnny.multitasker"
     create_api_model = TaskCreate(
-        subject=session_faker.unique.text(max_nb_chars=160),
+        subject=session_faker.unique.text(max_nb_chars=80),
         deadline=session_faker.future_datetime() if has_deadline else None,
     )
     user_owner = get_db_model_or_exception(db, User, username=user_owner_username)
@@ -146,20 +162,18 @@ def test_create_for_user(db: Session, session_faker: Faker, has_deadline: bool) 
 def test_update(
     db: Session, session_faker: Faker, do_set_deadline: bool, do_make_visible: bool
 ) -> None:
-    user_owner_username = "johnny.multitasker"
-    user_owner = get_db_model_or_exception(db, User, username=user_owner_username)
-    target_task = factories.task.make(
+    target_task = factories.make_task_persisted(
+        db,
         session_faker,
-        user=user_owner,
+        user_owner_username="johnny.multitasker",
         subject="task for update via service",
     )
-    factories.persist(db, target_task)
 
     visibility_to_set = (
         TaskVisibilityEnum.VISIBLE if do_make_visible else TaskVisibilityEnum.ARCHIVED
     )
     update_api_model = TaskUpdate(
-        subject=session_faker.unique.text(max_nb_chars=160),
+        subject=session_faker.unique.text(max_nb_chars=80),
         deadline=session_faker.future_datetime() if do_set_deadline else None,
         visibility=visibility_to_set,
     )
@@ -179,11 +193,15 @@ def test_update(
 
 
 def test_update_deadline_past(db: Session, session_faker: Faker) -> None:
-    target_task = get_db_model_or_exception(
-        db, Task, subject="task for update via service setting a past deadline"
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject="task for update via service setting a past deadline",
     )
+
     update_api_model = TaskUpdate(
-        subject=session_faker.unique.text(max_nb_chars=160),
+        subject=session_faker.unique.text(max_nb_chars=80),
         deadline=session_faker.past_datetime(),
         visibility=TaskVisibilityEnum.VISIBLE,
     )
@@ -192,9 +210,14 @@ def test_update_deadline_past(db: Session, session_faker: Faker) -> None:
         task_service.update(db, target_task, update_api_model)
 
 
-def test_delete(db: Session) -> None:
+def test_delete(db: Session, session_faker: Faker) -> None:
     target_task_subject = "task for delete via service"
-    target_task = get_db_model_or_exception(db, Task, subject=target_task_subject)
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject=target_task_subject,
+    )
 
     task_service.delete(db, target_task)
 

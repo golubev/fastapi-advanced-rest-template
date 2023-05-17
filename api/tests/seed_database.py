@@ -56,27 +56,7 @@ users = [
 tasks: list[dict[str, Any]] = [
     {
         "user": {
-            "username": "johnny.multitasker",
-            "full_name": "John Doe the Successful Man",
-        },
-        "tasks": [
-            {
-                "subject": "task for get_for_user",
-            },
-            {
-                "subject": "task for get_for_user_or_exception",
-            },
-            {
-                "subject": "task for update via service setting a past deadline",
-            },
-            {
-                "subject": "task for delete via service",
-            },
-        ],
-    },
-    {
-        "user": {
-            "username": "jane.with.some.tasks",
+            "username": "jane.with.some.tasks.to.list",
             "full_name": "Jane Doe",
         },
         "tasks": [
@@ -107,8 +87,15 @@ tasks: list[dict[str, Any]] = [
     },
     {
         "user": {
+            "username": "johnny.multitasker",
+            "full_name": "John Doe the Successful Man",
+        },
+        "tasks": [],
+    },
+    {
+        "user": {
             "username": "jane.without.any.tasks",
-            "full_name": "Jane Doe",
+            "full_name": "Jane Doe the Happiest Lady",
         },
         "tasks": [],
     },
