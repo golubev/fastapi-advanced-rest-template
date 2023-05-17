@@ -19,16 +19,13 @@ class UserService(BaseService[User]):
         """
         return self._get_or_exception(db, id)
 
-    def get_by_username(self, db: Session, username: str) -> User | None:
-        return db.query(User).filter(User.username == username).first()
-
     def get_by_credentials_verified(
         self, db: Session, *, username: str, password: str
     ) -> User | None:
         """
         Get a user by his login credentials with password verification.
         """
-        user = self.get_by_username(db, username)
+        user: User | None = db.query(User).filter(User.username == username).first()
         if not user:
             return None
         if not verify_password(password, user.hashed_password):

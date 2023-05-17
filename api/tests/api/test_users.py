@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 
 from app.core.security import verify_password
 from app.models import User
-from app.services import user_service
 from tests import factories, schemas
+from tests.common import get_db_model
 
 
 def test_create_user_successful(
@@ -26,8 +26,8 @@ def test_create_user_successful(
     assert response.status_code == status.HTTP_200_OK
 
     # assert user was correctly created in the DB
-    user_created = user_service.get_by_username(db, fake_user.username)
-    assert user_created
+    user_created = get_db_model(db, User, username=fake_user.username)
+    assert user_created is not None
     assert user_created.email == fake_user.email
     assert user_created.username == fake_user.username
     assert user_created.full_name == fake_user.full_name
@@ -125,8 +125,8 @@ def test_update_current_user_successful(
     assert response.status_code == status.HTTP_200_OK
 
     # assert user was correctly updated in the DB
-    user_updated = user_service.get_by_username(db, username_to_set)
-    assert user_updated
+    user_updated = get_db_model(db, User, username=username_to_set)
+    assert user_updated is not None
     assert user_updated.full_name == full_name_to_set
 
     # assert response content
@@ -194,7 +194,7 @@ def test_delete_current_user_successful(
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
     # assert user was deleted in the DB
-    user_still_exists = user_service.get_by_username(db, username_to_delete)
+    user_still_exists = get_db_model(db, User, username=username_to_delete)
     assert user_still_exists is None
 
 

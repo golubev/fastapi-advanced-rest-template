@@ -46,24 +46,6 @@ def test_get_or_exception_not_found(db: Session) -> None:
         user_service.get_or_exception(db, user_id_not_exists)
 
 
-def test_get_by_username(db: Session) -> None:
-    target_user_username = "johnny.test.readonly"
-    target_user = get_db_model_or_exception(db, User, username=target_user_username)
-
-    user_filtered = user_service.get_by_username(db, target_user_username)
-
-    assert user_filtered is not None
-    assert user_filtered.id == target_user.id
-
-
-def test_get_by_username_not_found(db: Session) -> None:
-    username_not_exists = "joe.the.elusive"
-
-    user = user_service.get_by_username(db, username_not_exists)
-
-    assert user is None
-
-
 @pytest.mark.parametrize(
     "username, password, should_succeed",
     [
