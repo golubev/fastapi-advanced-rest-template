@@ -10,6 +10,7 @@ from app.services import task_service
 from app.services.exceptions import (
     NotFoundException,
     OwnerAccessViolationException,
+    StateConflictException,
     ValidationException,
 )
 from tests import factories
@@ -208,6 +209,112 @@ def test_update_deadline_past(db: Session, session_faker: Faker) -> None:
 
     with pytest.raises(ValidationException):
         task_service.update(db, target_task, update_api_model)
+
+
+@pytest.mark.parametrize(
+    "target_task_visibility",
+    [visibility for visibility in TaskVisibilityEnum],
+)
+def test_resolve(
+    db: Session,
+    session_faker: Faker,
+    target_task_visibility: TaskVisibilityEnum,
+) -> None:
+    target_task_subject = f"task to resolve via service {target_task_visibility.value}"
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject=target_task_subject,
+        visibility=target_task_visibility,
+    )
+
+    task_service.resolve(db, target_task)
+
+    # assert the model has been updated
+    assert target_task.status == TaskStatusEnum.RESOLVED
+    assert target_task.resolve_time is not None
+
+    # assert the changes have been persisted
+    task_from_db = get_db_model_or_exception(db, Task, subject=target_task_subject)
+    assert task_from_db.status == TaskStatusEnum.RESOLVED
+    assert task_from_db.resolve_time is not None
+
+
+@pytest.mark.parametrize(
+    "status_not_open",
+    [status for status in TaskStatusEnum if status != TaskStatusEnum.OPEN],
+)
+def test_resolve_status_not_open(
+    db: Session, session_faker: Faker, status_not_open: TaskStatusEnum
+) -> None:
+    target_task_subject = (
+        f"task in status {status_not_open.value} to resolve via service"
+    )
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject=target_task_subject,
+        status=status_not_open,
+    )
+
+    with pytest.raises(StateConflictException):
+        task_service.resolve(db, target_task)
+
+
+@pytest.mark.parametrize(
+    "target_task_visibility",
+    [visibility for visibility in TaskVisibilityEnum],
+)
+def test_reopen(
+    db: Session,
+    session_faker: Faker,
+    target_task_visibility: TaskVisibilityEnum,
+) -> None:
+    target_task_subject = f"task to reopen via service {target_task_visibility.value}"
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject=target_task_subject,
+        status=TaskStatusEnum.RESOLVED,
+        visibility=target_task_visibility,
+        resolve_time=session_faker.past_datetime(),
+    )
+
+    task_service.reopen(db, target_task)
+
+    # assert the model has been updated
+    assert target_task.status == TaskStatusEnum.OPEN
+    assert target_task.resolve_time is None
+
+    # assert the changes have been persisted
+    task_from_db = get_db_model_or_exception(db, Task, subject=target_task_subject)
+    assert task_from_db.status == TaskStatusEnum.OPEN
+    assert task_from_db.resolve_time is None
+
+
+@pytest.mark.parametrize(
+    "status_not_resolved",
+    [status for status in TaskStatusEnum if status != TaskStatusEnum.RESOLVED],
+)
+def test_reopen_status_not_resolved(
+    db: Session, session_faker: Faker, status_not_resolved: TaskStatusEnum
+) -> None:
+    target_task_subject = (
+        f"task in status {status_not_resolved.value} to reopen via service"
+    )
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject=target_task_subject,
+        status=status_not_resolved,
+    )
+
+    with pytest.raises(StateConflictException):
+        task_service.reopen(db, target_task)
 
 
 def test_delete(db: Session, session_faker: Faker) -> None:
