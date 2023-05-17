@@ -6,7 +6,7 @@ from fastapi import status
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from app.enums import TaskVisibilityEnum
+from app.enums import TaskStatusEnum, TaskVisibilityEnum
 from app.models import Task, User
 from tests import factories, schemas
 from tests.common import get_db_model, get_db_model_or_exception
@@ -284,6 +284,224 @@ def test_update_task_unauthorized(
             visibility=TaskVisibilityEnum.VISIBLE,
         ),
     )
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_resolve_task_successful(
+    client: TestClient,
+    db: Session,
+    session_faker: Faker,
+    force_authenticate_user: Callable[[str], User],
+) -> None:
+    user_owner_username = "johnny.multitasker"
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username=user_owner_username,
+        subject="task to resolve via api",
+    )
+    target_task_id: int = target_task.id  # type: ignore
+    force_authenticate_user(user_owner_username)
+
+    response = client.post(f"/users/current-user/tasks/{target_task_id}/resolve")
+
+    assert response.status_code == status.HTTP_200_OK
+
+    # assert user was correctly updated in the DB
+    task_resolved = get_db_model_or_exception(db, Task, id=target_task_id)
+    assert task_resolved.status == TaskStatusEnum.RESOLVED
+    assert task_resolved.resolve_time is not None
+
+    # assert response content
+    response_payload = response.json()
+    assert response_payload == schemas.task.make_task_response_dict(task_resolved)
+
+
+@pytest.mark.parametrize(
+    "status_not_open",
+    [status for status in TaskStatusEnum if status != TaskStatusEnum.OPEN],
+)
+def test_resolve_task_status_not_open(
+    client: TestClient,
+    db: Session,
+    session_faker: Faker,
+    force_authenticate_user: Callable[[str], User],
+    status_not_open: TaskStatusEnum,
+) -> None:
+    user_owner_username = "johnny.multitasker"
+    target_task_subject = f"task in status {status_not_open.value} to resolve via api"
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username=user_owner_username,
+        subject=target_task_subject,
+        status=status_not_open,
+    )
+    target_task_id: int = target_task.id  # type: ignore
+    force_authenticate_user(user_owner_username)
+
+    response = client.post(f"/users/current-user/tasks/{target_task_id}/resolve")
+
+    assert response.status_code == status.HTTP_409_CONFLICT
+
+
+def test_resolve_task_of_another_user(
+    client: TestClient,
+    db: Session,
+    session_faker: Faker,
+    force_authenticate_user: Callable[[str], User],
+) -> None:
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject="task to resolve via api by another user",
+    )
+    target_task_id: int = target_task.id  # type: ignore
+    force_authenticate_user("jane.without.any.tasks")
+
+    response = client.post(f"/users/current-user/tasks/{target_task_id}/resolve")
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
+
+def test_resolve_task_not_found(
+    client: TestClient, force_authenticate_user: Callable[[str], User]
+) -> None:
+    task_id_not_exists = 9999
+    force_authenticate_user("johnny.multitasker")
+
+    response = client.post(f"/users/current-user/tasks/{task_id_not_exists}/resolve")
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_resolve_task_unauthorized(
+    client: TestClient,
+    db: Session,
+    session_faker: Faker,
+) -> None:
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject="task to resolve via api not authorized",
+    )
+    target_task_id: int = target_task.id  # type: ignore
+
+    response = client.post(f"/users/current-user/tasks/{target_task_id}/resolve")
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_reopen_task_successful(
+    client: TestClient,
+    db: Session,
+    session_faker: Faker,
+    force_authenticate_user: Callable[[str], User],
+) -> None:
+    user_owner_username = "johnny.multitasker"
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username=user_owner_username,
+        subject="task to reopen via api",
+        status=TaskStatusEnum.RESOLVED,
+        resolve_time=session_faker.past_datetime(),
+    )
+    target_task_id: int = target_task.id  # type: ignore
+    force_authenticate_user(user_owner_username)
+
+    response = client.post(f"/users/current-user/tasks/{target_task_id}/reopen")
+
+    assert response.status_code == status.HTTP_200_OK
+
+    # assert user was correctly updated in the DB
+    task_reopened = get_db_model_or_exception(db, Task, id=target_task_id)
+    assert task_reopened.status == TaskStatusEnum.OPEN
+    assert task_reopened.resolve_time is None
+
+    # assert response content
+    response_payload = response.json()
+    assert response_payload == schemas.task.make_task_response_dict(task_reopened)
+
+
+@pytest.mark.parametrize(
+    "status_not_resolved",
+    [status for status in TaskStatusEnum if status != TaskStatusEnum.RESOLVED],
+)
+def test_reopen_task_status_not_open(
+    client: TestClient,
+    db: Session,
+    session_faker: Faker,
+    force_authenticate_user: Callable[[str], User],
+    status_not_resolved: TaskStatusEnum,
+) -> None:
+    user_owner_username = "johnny.multitasker"
+    target_task_subject = (
+        f"task in status {status_not_resolved.value} to reopen via api"
+    )
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username=user_owner_username,
+        subject=target_task_subject,
+        status=status_not_resolved,
+    )
+    target_task_id: int = target_task.id  # type: ignore
+    force_authenticate_user(user_owner_username)
+
+    response = client.post(f"/users/current-user/tasks/{target_task_id}/reopen")
+
+    assert response.status_code == status.HTTP_409_CONFLICT
+
+
+def test_reopen_task_of_another_user(
+    client: TestClient,
+    db: Session,
+    session_faker: Faker,
+    force_authenticate_user: Callable[[str], User],
+) -> None:
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject="task to reopen via api by another user",
+    )
+    target_task_id: int = target_task.id  # type: ignore
+    force_authenticate_user("jane.without.any.tasks")
+
+    response = client.post(f"/users/current-user/tasks/{target_task_id}/reopen")
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
+
+def test_reopen_task_not_found(
+    client: TestClient, force_authenticate_user: Callable[[str], User]
+) -> None:
+    task_id_not_exists = 9999
+    force_authenticate_user("johnny.multitasker")
+
+    response = client.post(f"/users/current-user/tasks/{task_id_not_exists}/reopen")
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_reopen_task_unauthorized(
+    client: TestClient,
+    db: Session,
+    session_faker: Faker,
+) -> None:
+    target_task = factories.make_task_persisted(
+        db,
+        session_faker,
+        user_owner_username="johnny.multitasker",
+        subject="task to reopen via api not authorized",
+    )
+    target_task_id: int = target_task.id  # type: ignore
+
+    response = client.post(f"/users/current-user/tasks/{target_task_id}/reopen")
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 

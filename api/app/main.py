@@ -2,14 +2,9 @@ from fastapi import FastAPI, HTTPException, Request, Response, status
 from fastapi.exception_handlers import http_exception_handler
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.exceptions import AccessTokenMalformedException, BaseApplicationException
+from app.core import exceptions as core_exceptions
 from app.endpoints.api_router import api_router
-from app.services.exceptions import (
-    AccessViolationException,
-    NotFoundException,
-    UniqueConstraintViolationException,
-    ValidationException,
-)
+from app.services import exceptions as services_exceptions
 
 application = FastAPI()
 application.add_middleware(
@@ -38,19 +33,18 @@ def ping() -> dict[str, str]:
 # If an exception is not present in the dictionary below it will be handled like a
 # generic exception falling back to HTTP 500 status code.
 exceptions_to_http_status_codes = {
-    # app.services exceptions
-    NotFoundException: status.HTTP_404_NOT_FOUND,
-    UniqueConstraintViolationException: status.HTTP_409_CONFLICT,
-    ValidationException: status.HTTP_422_UNPROCESSABLE_ENTITY,
-    AccessViolationException: status.HTTP_403_FORBIDDEN,
-    # app.core exceptions
-    AccessTokenMalformedException: status.HTTP_401_UNAUTHORIZED,
+    services_exceptions.NotFoundException: status.HTTP_404_NOT_FOUND,
+    services_exceptions.UniqueConstraintViolationException: status.HTTP_409_CONFLICT,
+    services_exceptions.ValidationException: status.HTTP_422_UNPROCESSABLE_ENTITY,
+    services_exceptions.AccessViolationException: status.HTTP_403_FORBIDDEN,
+    services_exceptions.StateConflictException: status.HTTP_409_CONFLICT,
+    core_exceptions.AccessTokenMalformedException: status.HTTP_401_UNAUTHORIZED,
 }
 
 
-@application.exception_handler(BaseApplicationException)
+@application.exception_handler(core_exceptions.BaseApplicationException)
 async def application_exception_handler(
-    request: Request, exception: BaseApplicationException
+    request: Request, exception: core_exceptions.BaseApplicationException
 ) -> Response:
     for exception_class in exceptions_to_http_status_codes:
         if isinstance(exception, exception_class):

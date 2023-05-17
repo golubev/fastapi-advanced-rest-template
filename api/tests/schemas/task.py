@@ -33,4 +33,4 @@ def make_task_response_dict(db_model: Task) -> dict[str, str | int | None]:
 
 
 def _datetime_str_nullable(value: datetime | None) -> str | None:
-    return value.isoformat(timespec="seconds") if value is not None else None
+    return value.isoformat() if value is not None else None

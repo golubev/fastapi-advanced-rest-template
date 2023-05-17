@@ -7,6 +7,12 @@ class BaseServiceException(BaseApplicationException):
     """
 
 
+class StateConflictException(BaseApplicationException):
+    """
+    Base class for any exception raised from a service.
+    """
+
+
 class NotFoundException(BaseServiceException):
     """
     Raised when a model is not found in the database.
