@@ -1,8 +1,8 @@
-from fastapi import FastAPI, HTTPException, Request, Response, status
-from fastapi.exception_handlers import http_exception_handler
+from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core import exceptions as core_exceptions
+from app.core.exceptions import add_application_exception_handler
 from app.endpoints.api_router import api_router
 from app.services import exceptions as services_exceptions
 
@@ -41,25 +41,4 @@ exceptions_to_http_status_codes = {
     core_exceptions.AccessTokenMalformedException: status.HTTP_401_UNAUTHORIZED,
 }
 
-
-@application.exception_handler(core_exceptions.BaseApplicationException)
-async def application_exception_handler(
-    request: Request, exception: core_exceptions.BaseApplicationException
-) -> Response:
-    for exception_class in exceptions_to_http_status_codes:
-        if isinstance(exception, exception_class):
-            return await http_exception_handler(
-                request,
-                HTTPException(
-                    status_code=exceptions_to_http_status_codes[exception_class],
-                    detail=str(exception),
-                ),
-            )
-    # if nothing matched - fall back to the generic HTTP 500 status code
-    return await http_exception_handler(
-        request,
-        HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(exception),
-        ),
-    )
+add_application_exception_handler(application, exceptions_to_http_status_codes)
