@@ -7,7 +7,11 @@ from app.models import Task, User
 from app.schemas.task import TaskCreate, TaskUpdate
 
 from .base_service import BaseService
-from .exceptions import OwnerAccessViolationException, ValidationException
+from .exceptions import (
+    OwnerAccessViolationException,
+    StateConflictException,
+    ValidationException,
+)
 
 
 class TaskService(BaseService[Task]):
@@ -69,6 +73,28 @@ class TaskService(BaseService[Task]):
             ):
                 raise ValidationException("deadline can not be set in the past")
         data_to_update_prepared = update_api_model.dict()
+        self._update(db, db_model, data_to_update_prepared)
+
+    def resolve(self, db: Session, db_model: Task) -> None:
+        if db_model.status != TaskStatusEnum.OPEN:
+            raise StateConflictException(
+                f"Can resolve tasks only in status '{TaskStatusEnum.OPEN.value}'"
+            )
+        data_to_update_prepared = {
+            "status": TaskStatusEnum.RESOLVED,
+            "resolve_time": datetime.now(),
+        }
+        self._update(db, db_model, data_to_update_prepared)
+
+    def reopen(self, db: Session, db_model: Task) -> None:
+        if db_model.status != TaskStatusEnum.RESOLVED:
+            raise StateConflictException(
+                f"Can reopen tasks only in status '{TaskStatusEnum.RESOLVED.value}'"
+            )
+        data_to_update_prepared = {
+            "status": TaskStatusEnum.OPEN,
+            "resolve_time": None,
+        }
         self._update(db, db_model, data_to_update_prepared)
 
     def delete(self, db: Session, db_model: Task) -> None:

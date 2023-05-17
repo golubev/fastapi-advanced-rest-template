@@ -59,10 +59,40 @@ def update_task(
     update_api_model: TaskUpdate,
 ) -> TaskResponse:
     """
-    Update current user's details.
+    Update a task.
     """
     task = task_service.get_for_user_or_exception(db, task_id, current_user)
     task_service.update(db, task, update_api_model)
+    return TaskResponse.from_db_model(task)
+
+
+@router.post("/users/current-user/tasks/{task_id}/resolve")
+def resolve_task(
+    *,
+    db: Session = Depends(yield_session),
+    current_user: User = Depends(get_current_user),
+    task_id: int,
+) -> TaskResponse:
+    """
+    Transfer an open task into resolved state.
+    """
+    task = task_service.get_for_user_or_exception(db, task_id, current_user)
+    task_service.resolve(db, task)
+    return TaskResponse.from_db_model(task)
+
+
+@router.post("/users/current-user/tasks/{task_id}/reopen")
+def reopen_task(
+    *,
+    db: Session = Depends(yield_session),
+    current_user: User = Depends(get_current_user),
+    task_id: int,
+) -> TaskResponse:
+    """
+    Reopen a resolved task.
+    """
+    task = task_service.get_for_user_or_exception(db, task_id, current_user)
+    task_service.reopen(db, task)
     return TaskResponse.from_db_model(task)
 
 
@@ -74,7 +104,7 @@ def delete_task(
     current_user: User = Depends(get_current_user),
 ) -> Response:
     """
-    Update current user's details.
+    Delete a task.
     """
     task = task_service.get_for_user_or_exception(db, task_id, current_user)
     task_service.delete(db, task)
