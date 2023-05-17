@@ -26,7 +26,7 @@ def login_for_access_token(
     )
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
         )
     subject_user_id: int = user.id  # type: ignore

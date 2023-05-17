@@ -53,12 +53,12 @@ You may also filter tests to be run using the pytest `-k` flag.
 
 E.g. by test function name:
 ```
-./do-test.sh -k "test_create_user"
+./do-test.sh -k test_create_user
 ```
 
 Or e.g. by test file:
 ```
-./do-test.sh -k "user_service"
+./do-test.sh -k user_service
 ```
 
 

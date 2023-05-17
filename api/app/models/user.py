@@ -7,7 +7,7 @@ from sqlalchemy.sql import func
 
 from .base import BaseDBModel
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from .task import Task  # noqa: F401
 
 

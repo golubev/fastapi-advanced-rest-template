@@ -11,13 +11,22 @@ DBModelType = TypeVar("DBModelType")
 
 
 def get_db_model(
-    db: Session, model_class: Type[DBModelType], **filter_kwargs: str
+    db: Session,
+    model_class: Type[DBModelType],
+    **filter_kwargs: str | int,
 ) -> DBModelType | None:
-    return db.query(model_class).filter_by(**filter_kwargs).first()
+    db_model: DBModelType | None = (
+        db.query(model_class).filter_by(**filter_kwargs).first()
+    )
+    if db_model is not None:
+        db.refresh(db_model)
+    return db_model
 
 
 def get_db_model_or_exception(
-    db: Session, model_class: Type[DBModelType], **filter_kwargs: str
+    db: Session,
+    model_class: Type[DBModelType],
+    **filter_kwargs: str | int,
 ) -> DBModelType:
     db_model = get_db_model(db, model_class, **filter_kwargs)
     if db_model is None:

@@ -12,8 +12,7 @@ from app.endpoints.dependencies.auth import get_current_user
 from app.endpoints.dependencies.db import yield_session
 from app.main import application
 from app.models import User
-from app.services import user_service
-from tests.common import get_db_model_or_exception
+from tests.common import get_db_model, get_db_model_or_exception
 
 FAKER_LOCALES = ["en_US"]
 
@@ -50,7 +49,7 @@ def force_authenticate_user(
         def get_current_user_override(
             db_application_session: Session = Depends(yield_session),
         ) -> User | None:
-            return user_service.get_by_username(db_application_session, username)
+            return get_db_model(db_application_session, User, username=username)
 
         # user models are fetched from different sessions to avoid errors like
         # "Object '<User at ...>' already attached to session '...'"

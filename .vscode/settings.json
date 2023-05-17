@@ -15,6 +15,7 @@
         "httpx",
         "isort",
         "LOCALFOLDER",
+        "multitasker",
         "mypy",
         "ondelete",
         "onupdate",

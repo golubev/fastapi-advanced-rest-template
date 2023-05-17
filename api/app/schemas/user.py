@@ -13,8 +13,10 @@ class UserUpdate(BaseAPIModel):
     full_name: str | None = Field(example="John Doe", default=None)
 
 
-class UserCreate(UserUpdate):
+class UserCreate(BaseAPIModel):
+    username: UsernameType = Field(example="john.doe")
     email: EmailStr = Field(example="john.doe@mail.com")
+    full_name: str | None = Field(example="John Doe", default=None)
     password: SecretStr = Field(min_length=8, example="XZ#o2Q#eQ3y1")
 
 
