@@ -259,7 +259,7 @@ files = [
 name = "coverage"
 version = "7.2.5"
 description = "Code coverage measurement for Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -559,14 +559,14 @@ files = [
 
 [[package]]
 name = "httpcore"
-version = "0.17.0"
+version = "0.17.1"
 description = "A minimal low-level HTTP client."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "httpcore-0.17.0-py3-none-any.whl", hash = "sha256:0fdfea45e94f0c9fd96eab9286077f9ff788dd186635ae61b312693e4d943599"},
-    {file = "httpcore-0.17.0.tar.gz", hash = "sha256:cc045a3241afbf60ce056202301b4d8b6af08845e3294055eb26b09913ef903c"},
+    {file = "httpcore-0.17.1-py3-none-any.whl", hash = "sha256:628e768aaeec1f7effdc6408ba1c3cdbd7487c1fc570f7d66844ec4f003e1ca4"},
+    {file = "httpcore-0.17.1.tar.gz", hash = "sha256:caf508597c525f9b8bfff187e270666309f63115af30f7d68b16143a403c8356"},
 ]
 
 [package.dependencies]
@@ -619,7 +619,7 @@ files = [
 name = "iniconfig"
 version = "2.0.0"
 description = "brain-dead simple config-ini parsing"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -799,7 +799,7 @@ files = [
 name = "packaging"
 version = "23.1"
 description = "Core utilities for Python packages"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -860,7 +860,7 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.3.1)", "pytest-
 name = "pluggy"
 version = "1.0.0"
 description = "plugin and hook calling mechanisms for python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 files = [
@@ -1049,7 +1049,7 @@ files = [
 name = "pytest"
 version = "7.3.1"
 description = "pytest: simple powerful testing with Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1070,7 +1070,7 @@ testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "no
 name = "pytest-cov"
 version = "4.0.0"
 description = "Pytest plugin for measuring coverage."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 files = [
@@ -1360,4 +1360,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "abe3031746323dacfd5b7e39a5cff386ea0b30adef4bd833c7e2cdfcf4bde92d"
+content-hash = "2f7090f8876baa7707749d27e89c6f70f7b41c9b01dace19ef592ce740c63f31"
