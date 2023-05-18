@@ -3,4 +3,4 @@
 set -u
 set -e
 
-./api/do-lint.sh
+./application/do-lint.sh

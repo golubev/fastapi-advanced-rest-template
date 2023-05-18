@@ -4,7 +4,7 @@ services:
   api:
     container_name: todo_api
     build:
-      context: ./api
+      context: ./application
       dockerfile: Dockerfile.dev
       args:
         - DOCKER_USER_UID=${DOCKER_USER_UID:-1000}
@@ -20,7 +20,7 @@ services:
         "8000"
       ]
     environment:
-      - PYTHONPATH=/workspace/api
+      - PYTHONPATH=/workspace/application
       - ENVIRONMENT
       - SECURITY_SECRET_KEY
       - SECURITY_ACCESS_TOKEN_EXPIRE_SECONDS
@@ -28,7 +28,7 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
-    working_dir: /workspace/api
+    working_dir: /workspace/application
     volumes:
       - .:/workspace:rw
     networks:

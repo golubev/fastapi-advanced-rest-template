@@ -58,4 +58,4 @@ Navigate to http://localhost:8000/docs.
 
 ## Day-to-day tasks cheat sheet
 
-Navigate to [`api/README.md`](./api/README.md) to see frequently used commands cheat sheet.
+Navigate to [`application/README.md`](./application/README.md) to see frequently used commands cheat sheet.
