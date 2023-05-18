@@ -73,7 +73,10 @@ def test_get_by_credentials_verified(
 def test_create(db: Session, session_faker: Faker) -> None:
     fake_user_password = session_faker.unique.password()
     fake_user = factories.user.make(session_faker, password=fake_user_password)
-    create_api_model = UserCreate.from_db_model(fake_user, password=fake_user_password)
+    create_api_model = UserCreate(
+        **fake_user.__dict__,
+        password=fake_user_password,
+    )
 
     user_created = user_service.create(db, create_api_model)
 

@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
@@ -7,7 +8,9 @@ from sqlalchemy.sql import func
 from app.enums import TaskStatusEnum, TaskVisibilityEnum
 
 from .base import BaseDBModel
-from .user import User
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .user import User  # noqa: F401
 
 
 class Task(BaseDBModel):
@@ -21,7 +24,7 @@ class Task(BaseDBModel):
         index=True,
         nullable=False,
     )
-    user: User = relationship(User, back_populates="tasks")
+    user: "User" = relationship("User", back_populates="tasks")
 
     subject: str = Column(String, nullable=False)
     deadline: datetime | None = Column(DateTime, nullable=True)

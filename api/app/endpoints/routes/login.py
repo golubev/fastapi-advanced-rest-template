@@ -35,12 +35,12 @@ def login_for_access_token(
     )
 
 
-@router.get("/login/who-am-i")
+@router.get("/login/who-am-i", response_model=UserResponse)
 def read_current_user(
     *,
     current_user: User = Depends(get_current_user),
-) -> UserResponse:
+) -> User:
     """
     Get current user. Endpoint used to test the auth flow.
     """
-    return UserResponse.from_db_model(current_user)
+    return current_user

@@ -25,3 +25,6 @@ class UserResponse(BaseAPIModel):
     username: str = Field(example="john.doe")
     email: str = Field(example="john.doe@mail.com")
     full_name: str | None = Field(example="John Doe")
+
+    class Config:
+        orm_mode = True

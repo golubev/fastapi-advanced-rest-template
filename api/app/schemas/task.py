@@ -36,3 +36,6 @@ class TaskResponse(BaseAPIModel):
     status: TaskStatusEnum = Field(example=TaskStatusEnum.OPEN)
     visibility: TaskVisibilityEnum = Field(example=TaskVisibilityEnum.VISIBLE)
     resolve_time: datetime | None = Field(example=datetime(2023, 5, 10, 14, 23, 18))
+
+    class Config:
+        orm_mode = True
