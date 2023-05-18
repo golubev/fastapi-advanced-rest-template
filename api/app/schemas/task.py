@@ -25,13 +25,8 @@ class TaskCreate(BaseAPIModel):
 
 class TaskUpdate(BaseAPIModel):
     subject: str = Field(example="finish FastAPI tutorial")
-    deadline: datetime | None = Field(
-        example=datetime(2023, 6, 1, 18, 0, 0), default=None
-    )
-    visibility: TaskVisibilityEnum = Field(
-        example=TaskVisibilityEnum.ARCHIVED,
-        default=TaskVisibilityEnum.VISIBLE,
-    )
+    deadline: datetime | None = Field(example=datetime(2023, 6, 1, 18, 0, 0))
+    visibility: TaskVisibilityEnum = Field(example=TaskVisibilityEnum.ARCHIVED)
 
 
 class TaskResponse(BaseAPIModel):

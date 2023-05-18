@@ -4,20 +4,27 @@ from app.enums import TaskVisibilityEnum
 from app.models import Task
 
 
-def make_task_create_dict(db_model: Task) -> dict[str, str | None]:
-    return {
-        "subject": db_model.subject,
-        "deadline": _datetime_str_nullable(db_model.deadline),
-    }
-
-
-def make_task_update_dict(
-    *, subject: str, deadline: datetime | None, visibility: TaskVisibilityEnum | None
+def make_task_create_dict(
+    *,
+    subject: str,
+    deadline: datetime | None = None,
 ) -> dict[str, str | None]:
     return {
         "subject": subject,
         "deadline": _datetime_str_nullable(deadline),
-        "visibility": visibility.value if visibility is not None else None,
+    }
+
+
+def make_task_update_dict(
+    *,
+    subject: str,
+    deadline: datetime | None = None,
+    visibility: TaskVisibilityEnum = TaskVisibilityEnum.VISIBLE,
+) -> dict[str, str | None]:
+    return {
+        "subject": subject,
+        "deadline": _datetime_str_nullable(deadline),
+        "visibility": visibility.value,
     }
 
 

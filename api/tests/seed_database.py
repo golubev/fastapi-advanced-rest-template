@@ -1,4 +1,3 @@
-from datetime import datetime
 from random import randint
 from typing import Any
 
@@ -62,11 +61,12 @@ tasks: list[dict[str, Any]] = [
         "tasks": [
             {
                 "subject": "a task",
+                "visibility": TaskVisibilityEnum.VISIBLE,
             },
             {
                 "subject": "resolved task",
                 "status": TaskStatusEnum.RESOLVED,
-                "resolve_time": datetime(2023, 3, 15, 16, 30),
+                "visibility": TaskVisibilityEnum.VISIBLE,
             },
             {
                 "subject": "archived task",
@@ -79,7 +79,6 @@ tasks: list[dict[str, Any]] = [
             },
             {
                 "subject": "overdue archived task",
-                "deadline": datetime(2022, 1, 1),
                 "status": TaskStatusEnum.OVERDUE,
                 "visibility": TaskVisibilityEnum.ARCHIVED,
             },

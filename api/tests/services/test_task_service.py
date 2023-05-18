@@ -120,17 +120,19 @@ def test_list_for_user(
 
 
 @pytest.mark.parametrize(
-    "has_deadline",
+    "with_deadline",
     [
         False,
         True,
     ],
 )
-def test_create_for_user(db: Session, session_faker: Faker, has_deadline: bool) -> None:
+def test_create_for_user(
+    db: Session, session_faker: Faker, with_deadline: bool
+) -> None:
     user_owner_username = "johnny.multitasker"
     create_api_model = TaskCreate(
         subject=session_faker.unique.text(max_nb_chars=80),
-        deadline=session_faker.future_datetime() if has_deadline else None,
+        deadline=session_faker.future_datetime() if with_deadline else None,
     )
     user_owner = get_db_model_or_exception(db, User, username=user_owner_username)
 
@@ -280,7 +282,6 @@ def test_reopen(
         subject=target_task_subject,
         status=TaskStatusEnum.RESOLVED,
         visibility=target_task_visibility,
-        resolve_time=session_faker.past_datetime(),
     )
 
     task_service.reopen(db, target_task)

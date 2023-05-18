@@ -27,28 +27,28 @@ def test_create_task_successful(
     with_deadline: bool,
 ) -> None:
     user_authenticated = force_authenticate_user("johnny.multitasker")
-    fake_task = factories.task.make(
-        session_faker,
-        user=user_authenticated,
-        deadline=session_faker.future_datetime() if with_deadline else None,
-    )
+    subject_to_set = session_faker.unique.text(max_nb_chars=80)
+    deadline_to_set = session_faker.future_datetime() if with_deadline else None
 
     response = client.post(
         "/users/current-user/tasks/",
-        json=schemas.task.make_task_create_dict(fake_task),
+        json=schemas.task.make_task_create_dict(
+            subject=subject_to_set,
+            deadline=deadline_to_set,
+        ),
     )
 
     assert response.status_code == status.HTTP_200_OK
 
     # assert user was correctly created in the DB
-    task_created = get_db_model(db, Task, subject=fake_task.subject)
+    task_created = get_db_model(db, Task, subject=subject_to_set)
     assert task_created is not None
     assert task_created.user_id == user_authenticated.id
-    assert task_created.subject == fake_task.subject
-    assert task_created.deadline == fake_task.deadline
-    assert task_created.status == fake_task.status
-    assert task_created.visibility == fake_task.visibility
-    assert task_created.resolve_time == fake_task.resolve_time
+    assert task_created.subject == subject_to_set
+    assert task_created.deadline == deadline_to_set
+    assert task_created.status == TaskStatusEnum.OPEN
+    assert task_created.visibility == TaskVisibilityEnum.VISIBLE
+    assert task_created.resolve_time is None
 
     # assert response content
     response_payload = response.json()
@@ -60,30 +60,25 @@ def test_create_task_invalid_deadline(
     session_faker: Faker,
     force_authenticate_user: Callable[[str], User],
 ) -> None:
-    user_authenticated = force_authenticate_user("johnny.multitasker")
-    fake_task = factories.task.make(
-        session_faker,
-        user=user_authenticated,
-        deadline=session_faker.past_datetime(),
-    )
+    force_authenticate_user("johnny.multitasker")
 
     response = client.post(
         "/users/current-user/tasks/",
-        json=schemas.task.make_task_create_dict(fake_task),
+        json=schemas.task.make_task_create_dict(
+            subject="a task to create with a past deadline",
+            deadline=session_faker.past_datetime(),
+        ),
     )
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 
-def test_create_task_unauthorized(
-    client: TestClient, db: Session, session_faker: Faker
-) -> None:
-    user_owner = get_db_model_or_exception(db, User, username="johnny.multitasker")
-    fake_task = factories.task.make(session_faker, user=user_owner)
-
+def test_create_task_unauthorized(client: TestClient, db: Session) -> None:
     response = client.post(
         "/users/current-user/tasks/",
-        json=schemas.task.make_task_create_dict(fake_task),
+        json=schemas.task.make_task_create_dict(
+            subject="a task to create unauthorized",
+        ),
     )
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
@@ -209,8 +204,6 @@ def test_update_task_of_another_user(
         f"/users/current-user/tasks/{target_task.id}",
         json=schemas.task.make_task_update_dict(
             subject="sudo make Jane a sandwich",
-            deadline=None,
-            visibility=TaskVisibilityEnum.VISIBLE,
         ),
     )
 
@@ -235,9 +228,8 @@ def test_update_task_deadline_past(
     response = client.put(
         f"/users/current-user/tasks/{target_task.id}",
         json=schemas.task.make_task_update_dict(
-            subject=session_faker.unique.text(max_nb_chars=80),
+            subject="task updated setting a past deadline",
             deadline=session_faker.past_datetime(),
-            visibility=TaskVisibilityEnum.VISIBLE,
         ),
     )
 
@@ -246,7 +238,6 @@ def test_update_task_deadline_past(
 
 def test_update_task_not_found(
     client: TestClient,
-    session_faker: Faker,
     force_authenticate_user: Callable[[str], User],
 ) -> None:
     task_id_not_exists = 9999
@@ -255,9 +246,7 @@ def test_update_task_not_found(
     response = client.put(
         f"/users/current-user/tasks/{task_id_not_exists}",
         json=schemas.task.make_task_update_dict(
-            subject=session_faker.unique.text(max_nb_chars=80),
-            deadline=None,
-            visibility=TaskVisibilityEnum.VISIBLE,
+            subject="task that doesn't exist updated",
         ),
     )
 
@@ -280,8 +269,6 @@ def test_update_task_unauthorized(
         f"/users/current-user/tasks/{target_task.id}",
         json=schemas.task.make_task_update_dict(
             subject="You've been hacked. Send us $1M",
-            deadline=None,
-            visibility=TaskVisibilityEnum.VISIBLE,
         ),
     )
 
@@ -408,7 +395,6 @@ def test_reopen_task_successful(
         user_owner_username=user_owner_username,
         subject="task to reopen via api",
         status=TaskStatusEnum.RESOLVED,
-        resolve_time=session_faker.past_datetime(),
     )
     target_task_id: int = target_task.id  # type: ignore
     force_authenticate_user(user_owner_username)
