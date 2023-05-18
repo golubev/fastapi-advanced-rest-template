@@ -1,10 +1,10 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
 
 from app.core.security import generate_access_token
-from app.endpoints.dependencies.auth import get_current_user
-from app.endpoints.dependencies.db import yield_session
+from app.endpoints.dependencies import CurrentUserDependency, SessionDependency
 from app.models import User
 from app.schemas.token import TokenResponse
 from app.schemas.user import UserResponse
@@ -15,8 +15,8 @@ router = APIRouter()
 
 @router.post("/login/access-token")
 def login_for_access_token(
-    db: Session = Depends(yield_session),
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: SessionDependency,
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> TokenResponse:
     """
     OAuth2 compatible token login, get an access token for future requests
@@ -38,7 +38,7 @@ def login_for_access_token(
 @router.get("/login/who-am-i", response_model=UserResponse)
 def read_current_user(
     *,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserDependency,
 ) -> User:
     """
     Get current user. Endpoint used to test the auth flow.

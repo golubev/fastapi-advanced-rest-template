@@ -3,13 +3,12 @@ from typing import Callable, Generator
 
 import pytest
 from faker import Faker
-from fastapi import Depends
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from app.core.db import get_session
+from app.endpoints.dependencies import SessionDependency
 from app.endpoints.dependencies.auth import get_current_user
-from app.endpoints.dependencies.db import yield_session
 from app.main import application
 from app.models import User
 from tests.common import get_db_model, get_db_model_or_exception
@@ -47,7 +46,7 @@ def force_authenticate_user(
 ) -> Generator[Callable[[str], User], None, None]:
     def fixture_yielded_callable(username: str) -> User:
         def get_current_user_override(
-            db_application_session: Session = Depends(yield_session),
+            db_application_session: SessionDependency,
         ) -> User | None:
             return get_db_model(db_application_session, User, username=username)
 

@@ -1,8 +1,6 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, status
 
-from app.endpoints.dependencies.auth import get_current_user
-from app.endpoints.dependencies.db import yield_session
+from app.endpoints.dependencies import CurrentUserDependency, SessionDependency
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.services import user_service
@@ -13,7 +11,7 @@ router = APIRouter()
 @router.post("/users/", response_model=UserResponse)
 def create_user(
     *,
-    db: Session = Depends(yield_session),
+    db: SessionDependency,
     create_api_model: UserCreate,
 ) -> User:
     """
@@ -25,7 +23,7 @@ def create_user(
 @router.get("/users/current-user", response_model=UserResponse)
 def read_current_user(
     *,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserDependency,
 ) -> User:
     """
     Get the current user's details.
@@ -36,8 +34,8 @@ def read_current_user(
 @router.put("/users/current-user", response_model=UserResponse)
 def update_current_user(
     *,
-    db: Session = Depends(yield_session),
-    current_user: User = Depends(get_current_user),
+    db: SessionDependency,
+    current_user: CurrentUserDependency,
     update_api_model: UserUpdate,
 ) -> User:
     """
@@ -53,8 +51,8 @@ def update_current_user(
 )
 def delete_current_user(
     *,
-    db: Session = Depends(yield_session),
-    current_user: User = Depends(get_current_user),
+    db: SessionDependency,
+    current_user: CurrentUserDependency,
 ) -> None:
     """
     Delete the current user.

@@ -1,11 +1,9 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, status
 
 from app.config import config
-from app.endpoints.dependencies.auth import get_current_user
-from app.endpoints.dependencies.db import yield_session
+from app.endpoints.dependencies import CurrentUserDependency, SessionDependency
 from app.enums import TaskVisibilityEnum
-from app.models import Task, User
+from app.models import Task
 from app.schemas.task import TaskCreate, TaskResponse, TaskUpdate
 from app.services import task_service
 
@@ -15,8 +13,8 @@ router = APIRouter()
 @router.post("/users/current-user/tasks/", response_model=TaskResponse)
 def create_task(
     *,
-    db: Session = Depends(yield_session),
-    current_user: User = Depends(get_current_user),
+    db: SessionDependency,
+    current_user: CurrentUserDependency,
     create_api_model: TaskCreate,
 ) -> Task:
     """
@@ -28,8 +26,8 @@ def create_task(
 @router.get("/users/current-user/tasks/", response_model=list[TaskResponse])
 def list_tasks(
     *,
-    db: Session = Depends(yield_session),
-    current_user: User = Depends(get_current_user),
+    db: SessionDependency,
+    current_user: CurrentUserDependency,
     visibility: TaskVisibilityEnum | None = None,
     offset: int = 0,
     limit: int = config.API_LIST_LIMIT_DEFAULT,
@@ -49,8 +47,8 @@ def list_tasks(
 @router.put("/users/current-user/tasks/{task_id}", response_model=TaskResponse)
 def update_task(
     *,
-    db: Session = Depends(yield_session),
-    current_user: User = Depends(get_current_user),
+    db: SessionDependency,
+    current_user: CurrentUserDependency,
     task_id: int,
     update_api_model: TaskUpdate,
 ) -> Task:
@@ -65,8 +63,8 @@ def update_task(
 @router.post("/users/current-user/tasks/{task_id}/resolve", response_model=TaskResponse)
 def resolve_task(
     *,
-    db: Session = Depends(yield_session),
-    current_user: User = Depends(get_current_user),
+    db: SessionDependency,
+    current_user: CurrentUserDependency,
     task_id: int,
 ) -> Task:
     """
@@ -80,8 +78,8 @@ def resolve_task(
 @router.post("/users/current-user/tasks/{task_id}/reopen", response_model=TaskResponse)
 def reopen_task(
     *,
-    db: Session = Depends(yield_session),
-    current_user: User = Depends(get_current_user),
+    db: SessionDependency,
+    current_user: CurrentUserDependency,
     task_id: int,
 ) -> Task:
     """
@@ -98,9 +96,9 @@ def reopen_task(
 )
 def delete_task(
     *,
-    db: Session = Depends(yield_session),
+    db: SessionDependency,
     task_id: int,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserDependency,
 ) -> None:
     """
     Delete a task.
