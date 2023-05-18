@@ -4,9 +4,10 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
 from app.core.security import AccessTokenPayload
-from app.endpoints.dependencies import SessionDependency
 from app.models import User
 from app.services import user_service
+
+from .db import SessionDependency
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/login/access-token")
 
