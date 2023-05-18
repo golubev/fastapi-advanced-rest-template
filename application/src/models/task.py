@@ -5,7 +5,7 @@ from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from app.enums import TaskStatusEnum, TaskVisibilityEnum
+from src.enums import TaskStatusEnum, TaskVisibilityEnum
 
 from .base import BaseDBModel
 

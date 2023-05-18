@@ -6,8 +6,8 @@ from fastapi import status
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from app.core.security import verify_password
-from app.models import User
+from src.core.security import verify_password
+from src.models import User
 from tests import factories, schemas
 from tests.common import get_db_model
 

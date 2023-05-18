@@ -1,10 +1,10 @@
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core import exceptions as core_exceptions
-from app.core.exceptions import add_application_exception_handler
-from app.endpoints.api_router import api_router
-from app.services import exceptions as services_exceptions
+from src.core import exceptions as core_exceptions
+from src.core.exceptions import add_application_exception_handler
+from src.endpoints.api_router import api_router
+from src.services import exceptions as services_exceptions
 
 application = FastAPI()
 application.add_middleware(
@@ -28,7 +28,7 @@ def ping() -> dict[str, str]:
 # map. The most basic exceptions SHOULD be put in the end of this dictionary
 #
 # Any application's custom exception SHOULD be derived from the
-# `app.core.exceptions.BaseApplicationException`.
+# `src.core.exceptions.BaseApplicationException`.
 #
 # If an exception is not present in the dictionary below it will be handled like a
 # generic exception falling back to HTTP 500 status code.

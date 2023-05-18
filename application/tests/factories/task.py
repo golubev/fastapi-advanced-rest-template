@@ -2,8 +2,8 @@ from datetime import datetime
 
 from faker import Faker
 
-from app.enums import TaskStatusEnum, TaskVisibilityEnum
-from app.models import Task, User
+from src.enums import TaskStatusEnum, TaskVisibilityEnum
+from src.models import Task, User
 
 
 def make(

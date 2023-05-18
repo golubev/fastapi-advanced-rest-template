@@ -2,7 +2,7 @@ from typing import Any, Generic, Type, TypeVar
 
 from sqlalchemy.orm import Session
 
-from app.models import BaseDBModel
+from src.models import BaseDBModel
 
 from .exceptions import NotFoundException
 

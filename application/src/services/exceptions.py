@@ -1,4 +1,4 @@
-from app.core.exceptions import BaseApplicationException
+from src.core.exceptions import BaseApplicationException
 
 
 class BaseServiceException(BaseApplicationException):

@@ -3,7 +3,7 @@ from typing import Any
 
 from pydantic import Field, validator
 
-from app.enums import TaskStatusEnum, TaskVisibilityEnum
+from src.enums import TaskStatusEnum, TaskVisibilityEnum
 
 from .base import BaseAPIModel
 

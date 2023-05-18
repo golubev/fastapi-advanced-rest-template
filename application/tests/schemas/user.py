@@ -1,4 +1,4 @@
-from app.models import User
+from src.models import User
 
 
 def make_user_create_dict(

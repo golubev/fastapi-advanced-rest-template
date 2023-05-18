@@ -6,8 +6,8 @@ from jose.exceptions import JWTError
 from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 
-from app.config import config
-from app.core.exceptions import AccessTokenMalformedException
+from src.config import config
+from src.core.exceptions import AccessTokenMalformedException
 
 crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

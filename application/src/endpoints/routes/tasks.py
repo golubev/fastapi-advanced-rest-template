@@ -1,11 +1,11 @@
 from fastapi import APIRouter, status
 
-from app.config import config
-from app.endpoints.dependencies import CurrentUserDependency, SessionDependency
-from app.enums import TaskVisibilityEnum
-from app.models import Task
-from app.schemas.task import TaskCreate, TaskResponse, TaskUpdate
-from app.services import task_service
+from src.config import config
+from src.endpoints.dependencies import CurrentUserDependency, SessionDependency
+from src.enums import TaskVisibilityEnum
+from src.models import Task
+from src.schemas.task import TaskCreate, TaskResponse, TaskUpdate
+from src.services import task_service
 
 router = APIRouter()
 

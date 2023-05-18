@@ -6,11 +6,11 @@ from faker import Faker
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from app.core.db import get_session
-from app.endpoints.dependencies import SessionDependency
-from app.endpoints.dependencies.auth import get_current_user
-from app.main import application
-from app.models import User
+from src.core.db import get_session
+from src.endpoints.dependencies import SessionDependency
+from src.endpoints.dependencies.auth import get_current_user
+from src.main import application
+from src.models import User
 from tests.common import get_db_model, get_db_model_or_exception
 
 FAKER_LOCALES = ["en_US"]

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, status
 
-from app.endpoints.dependencies import CurrentUserDependency, SessionDependency
-from app.models.user import User
-from app.schemas.user import UserCreate, UserResponse, UserUpdate
-from app.services import user_service
+from src.endpoints.dependencies import CurrentUserDependency, SessionDependency
+from src.models.user import User
+from src.schemas.user import UserCreate, UserResponse, UserUpdate
+from src.services import user_service
 
 router = APIRouter()
 

@@ -3,11 +3,11 @@ from faker import Faker
 from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 
-from app.enums import TaskStatusEnum, TaskVisibilityEnum
-from app.models import Task, User
-from app.schemas.task import TaskCreate, TaskUpdate
-from app.services import task_service
-from app.services.exceptions import (
+from src.enums import TaskStatusEnum, TaskVisibilityEnum
+from src.models import Task, User
+from src.schemas.task import TaskCreate, TaskUpdate
+from src.services import task_service
+from src.services.exceptions import (
     NotFoundException,
     OwnerAccessViolationException,
     StateConflictException,

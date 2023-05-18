@@ -3,12 +3,12 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.core.security import generate_access_token
-from app.endpoints.dependencies import CurrentUserDependency, SessionDependency
-from app.models import User
-from app.schemas.token import TokenResponse
-from app.schemas.user import UserResponse
-from app.services import user_service
+from src.core.security import generate_access_token
+from src.endpoints.dependencies import CurrentUserDependency, SessionDependency
+from src.models import User
+from src.schemas.token import TokenResponse
+from src.schemas.user import UserResponse
+from src.services import user_service
 
 router = APIRouter()
 

@@ -2,9 +2,9 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from app.enums import TaskStatusEnum, TaskVisibilityEnum
-from app.models import Task, User
-from app.schemas.task import TaskCreate, TaskUpdate
+from src.enums import TaskStatusEnum, TaskVisibilityEnum
+from src.models import Task, User
+from src.schemas.task import TaskCreate, TaskUpdate
 
 from .base_service import BaseService
 from .exceptions import (

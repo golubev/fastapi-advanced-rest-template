@@ -3,11 +3,11 @@ from faker import Faker
 from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 
-from app.core.security import verify_password
-from app.models import User
-from app.schemas.user import UserCreate, UserUpdate
-from app.services import user_service
-from app.services.exceptions import NotFoundException
+from src.core.security import verify_password
+from src.models import User
+from src.schemas.user import UserCreate, UserUpdate
+from src.services import user_service
+from src.services.exceptions import NotFoundException
 from tests import factories
 from tests.common import get_db_model, get_db_model_or_exception
 

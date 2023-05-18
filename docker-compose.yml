@@ -12,7 +12,7 @@ services:
     command:
       [
         "uvicorn",
-        "app.main:application",
+        "src.main:application",
         "--reload",
         "--host",
         "0.0.0.0",

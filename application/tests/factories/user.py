@@ -1,7 +1,7 @@
 from faker import Faker
 
-from app.core.security import get_password_hash
-from app.models import User
+from src.core.security import get_password_hash
+from src.models import User
 
 
 def make(

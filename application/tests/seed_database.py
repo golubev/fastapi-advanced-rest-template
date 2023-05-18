@@ -3,8 +3,8 @@ from typing import Any
 
 from faker import Faker
 
-from app.core.db import get_session
-from app.enums import TaskStatusEnum, TaskVisibilityEnum
+from src.core.db import get_session
+from src.enums import TaskStatusEnum, TaskVisibilityEnum
 from tests import factories
 from tests.conftest import FAKER_LOCALES
 

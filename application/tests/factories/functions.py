@@ -3,7 +3,7 @@ from typing import Any, TypeVar
 from faker import Faker
 from sqlalchemy.orm import Session
 
-from app.models import BaseDBModel, Task, User
+from src.models import BaseDBModel, Task, User
 from tests.common import get_db_model_or_exception
 
 from . import task

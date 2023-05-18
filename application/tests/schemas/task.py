@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from app.enums import TaskVisibilityEnum
-from app.models import Task
+from src.enums import TaskVisibilityEnum
+from src.models import Task
 
 
 def make_task_create_dict(

@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import exists
 
-from app.core.security import get_password_hash, verify_password
-from app.models import User
-from app.schemas.user import UserCreate, UserUpdate
+from src.core.security import get_password_hash, verify_password
+from src.models import User
+from src.schemas.user import UserCreate, UserUpdate
 
 from .base_service import BaseService
 from .exceptions import UniqueConstraintViolationException

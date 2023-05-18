@@ -3,9 +3,9 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from app.core.security import AccessTokenPayload
-from app.models import User
-from app.services import user_service
+from src.core.security import AccessTokenPayload
+from src.models import User
+from src.services import user_service
 
 from .db import SessionDependency
 

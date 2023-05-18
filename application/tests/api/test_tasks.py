@@ -6,8 +6,8 @@ from fastapi import status
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from app.enums import TaskStatusEnum, TaskVisibilityEnum
-from app.models import Task, User
+from src.enums import TaskStatusEnum, TaskVisibilityEnum
+from src.models import Task, User
 from tests import factories, schemas
 from tests.common import get_db_model, get_db_model_or_exception
 
