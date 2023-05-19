@@ -60,7 +60,7 @@ services:
     networks:
       - todo_network
     ports:
-      - "5555:5432"
+      - "4444:5432"
     restart: always
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
@@ -78,7 +78,19 @@ services:
     networks:
       - todo_network
     ports:
-      - "5556:5432"
+      - "4445:5432"
+
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: todo_rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_VIRTUAL_HOST}
+    networks:
+      - todo_network
+    ports:
+      - "15672:15672"
 
 networks:
   todo_network:

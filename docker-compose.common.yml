@@ -17,6 +17,10 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - RABBITMQ_HOST
+      - RABBITMQ_VIRTUAL_HOST
+      - RABBITMQ_USER
+      - RABBITMQ_PASS
     working_dir: /workspace/application
     volumes:
       - .:/workspace:rw
