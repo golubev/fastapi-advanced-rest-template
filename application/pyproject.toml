@@ -7,6 +7,7 @@ authors = ["golubev <951364+golubev@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "^3.11"
 alembic = "~1.10.4"
+celery = "~5.2.7"
 email-validator = "~1.3.1"
 fastapi = "~0.95.1"
 passlib = {version = "~1.7.4", extras = ["bcrypt"]}
