@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class TaskStatusEnum(Enum):
+class TodoItemStatusEnum(Enum):
     OPEN = "open"
     RESOLVED = "resolved"
     OVERDUE = "overdue"

@@ -15,7 +15,7 @@ def create_user(
     create_api_model: UserCreate,
 ) -> User:
     """
-    Register a new user.
+    Register (create) a new `User`.
     """
     return user_service.create(db, create_api_model)
 
@@ -26,7 +26,7 @@ def read_current_user(
     current_user: CurrentUserDependency,
 ) -> User:
     """
-    Get the current user's details.
+    Get the current (authenticated) `User`'s details.
     """
     return current_user
 
@@ -39,7 +39,7 @@ def update_current_user(
     update_api_model: UserUpdate,
 ) -> User:
     """
-    Update the current user's details.
+    Update the current (authenticated) `User`'s details.
     """
     user_service.update(db, current_user, update_api_model)
     return current_user
@@ -55,6 +55,6 @@ def delete_current_user(
     current_user: CurrentUserDependency,
 ) -> None:
     """
-    Delete the current user.
+    Delete the current (authenticated) `User`.
     """
     user_service.delete(db, current_user)

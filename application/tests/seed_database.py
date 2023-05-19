@@ -4,7 +4,7 @@ from typing import Any
 from faker import Faker
 
 from src.core.db import get_session
-from src.enums import TaskStatusEnum, TaskVisibilityEnum
+from src.enums import TodoItemStatusEnum, TodoItemVisibilityEnum
 from tests import factories
 from tests.conftest import FAKER_LOCALES
 
@@ -52,35 +52,35 @@ users = [
     },
 ]
 
-tasks: list[dict[str, Any]] = [
+todo_items: list[dict[str, Any]] = [
     {
         "user": {
-            "username": "jane.with.some.tasks.to.list",
+            "username": "jane.with.some.todo_items.to.list",
             "full_name": "Jane Doe",
         },
-        "tasks": [
+        "todo_items": [
             {
-                "subject": "a task",
-                "visibility": TaskVisibilityEnum.VISIBLE,
+                "subject": "a todo item",
+                "visibility": TodoItemVisibilityEnum.VISIBLE,
             },
             {
-                "subject": "resolved task",
-                "status": TaskStatusEnum.RESOLVED,
-                "visibility": TaskVisibilityEnum.VISIBLE,
+                "subject": "resolved todo item",
+                "status": TodoItemStatusEnum.RESOLVED,
+                "visibility": TodoItemVisibilityEnum.VISIBLE,
             },
             {
-                "subject": "archived task",
-                "visibility": TaskVisibilityEnum.ARCHIVED,
+                "subject": "archived todo item",
+                "visibility": TodoItemVisibilityEnum.ARCHIVED,
             },
             {
-                "subject": "resolved archived task",
-                "status": TaskStatusEnum.RESOLVED,
-                "visibility": TaskVisibilityEnum.ARCHIVED,
+                "subject": "resolved archived todo item",
+                "status": TodoItemStatusEnum.RESOLVED,
+                "visibility": TodoItemVisibilityEnum.ARCHIVED,
             },
             {
-                "subject": "overdue archived task",
-                "status": TaskStatusEnum.OVERDUE,
-                "visibility": TaskVisibilityEnum.ARCHIVED,
+                "subject": "overdue archived todo item",
+                "status": TodoItemStatusEnum.OVERDUE,
+                "visibility": TodoItemVisibilityEnum.ARCHIVED,
             },
         ],
     },
@@ -89,14 +89,14 @@ tasks: list[dict[str, Any]] = [
             "username": "johnny.multitasker",
             "full_name": "John Doe the Successful Man",
         },
-        "tasks": [],
+        "todo_items": [],
     },
     {
         "user": {
-            "username": "jane.without.any.tasks",
+            "username": "jane.without.any.todo_items",
             "full_name": "Jane Doe the Happiest Lady",
         },
-        "tasks": [],
+        "todo_items": [],
     },
 ]
 
@@ -107,15 +107,17 @@ with get_session() as db:
         user_model = factories.user.make(faker, **user_data)
         factories.persist(db, user_model)
 
-    for tasks_with_user_data in tasks:
-        task_user_model = factories.user.make(faker, **tasks_with_user_data["user"])
-        factories.persist(db, task_user_model)
-        for task_data in tasks_with_user_data["tasks"]:
-            task_model = factories.task.make(
+    for todo_items_with_user_data in todo_items:
+        todo_item_user_model = factories.user.make(
+            faker, **todo_items_with_user_data["user"]
+        )
+        factories.persist(db, todo_item_user_model)
+        for todo_item_data in todo_items_with_user_data["todo_items"]:
+            todo_item_model = factories.todo_item.make(
                 faker,
-                user=task_user_model,
-                **task_data,
+                user=todo_item_user_model,
+                **todo_item_data,
             )
-            factories.persist(db, task_model)
+            factories.persist(db, todo_item_model)
 
 print("# successfully seeded database")

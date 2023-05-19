@@ -1,2 +1,2 @@
-from .task_status_enum import TaskStatusEnum  # noqa: F401
-from .task_visibility_enum import TaskVisibilityEnum  # noqa: F401
+from .todo_item_status_enum import TodoItemStatusEnum  # noqa: F401
+from .todo_item_visibility_enum import TodoItemVisibilityEnum  # noqa: F401

@@ -5,7 +5,7 @@ from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from src.enums import TaskStatusEnum, TaskVisibilityEnum
+from src.enums import TodoItemStatusEnum, TodoItemVisibilityEnum
 
 from .base import BaseDBModel
 
@@ -13,8 +13,8 @@ if TYPE_CHECKING:  # pragma: no cover
     from .user import User  # noqa: F401
 
 
-class Task(BaseDBModel):
-    __tablename__: str = "tasks"
+class TodoItem(BaseDBModel):
+    __tablename__: str = "todo_items"
 
     id: int | None = Column(Integer, primary_key=True)
 
@@ -24,29 +24,29 @@ class Task(BaseDBModel):
         index=True,
         nullable=False,
     )
-    user: "User" = relationship("User", back_populates="tasks")
+    user: "User" = relationship("User", back_populates="todo_items")
 
     subject: str = Column(String, nullable=False)
     deadline: datetime | None = Column(DateTime, nullable=True)
-    status: TaskStatusEnum = Column(
+    status: TodoItemStatusEnum = Column(
         Enum(
-            TaskStatusEnum,
-            name="task_status_enum",
+            TodoItemStatusEnum,
+            name="todo_item_status_enum",
             values_callable=lambda enum_type: [member.value for member in enum_type],
         ),
         nullable=False,
-        default=TaskStatusEnum.OPEN,
-        server_default=TaskStatusEnum.OPEN.value,
+        default=TodoItemStatusEnum.OPEN,
+        server_default=TodoItemStatusEnum.OPEN.value,
     )
-    visibility: TaskVisibilityEnum = Column(
+    visibility: TodoItemVisibilityEnum = Column(
         Enum(
-            TaskVisibilityEnum,
-            name="task_visibility_enum",
+            TodoItemVisibilityEnum,
+            name="todo_item_visibility_enum",
             values_callable=lambda enum_type: [member.value for member in enum_type],
         ),
         nullable=False,
-        default=TaskVisibilityEnum.VISIBLE,
-        server_default=TaskVisibilityEnum.VISIBLE.value,
+        default=TodoItemVisibilityEnum.VISIBLE,
+        server_default=TodoItemVisibilityEnum.VISIBLE.value,
     )
     resolve_time: datetime | None = Column(DateTime, nullable=True)
 

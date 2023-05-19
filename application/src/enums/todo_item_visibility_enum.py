@@ -1,6 +1,6 @@
 from enum import Enum
 
 
-class TaskVisibilityEnum(Enum):
+class TodoItemVisibilityEnum(Enum):
     VISIBLE = "visible"
     ARCHIVED = "archived"

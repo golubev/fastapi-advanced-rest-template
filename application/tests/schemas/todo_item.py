@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from src.enums import TaskVisibilityEnum
-from src.models import Task
+from src.enums import TodoItemVisibilityEnum
+from src.models import TodoItem
 
 
-def make_task_create_dict(
+def make_todo_item_create_dict(
     *,
     subject: str,
     deadline: datetime | None = None,
@@ -15,11 +15,11 @@ def make_task_create_dict(
     }
 
 
-def make_task_update_dict(
+def make_todo_item_update_dict(
     *,
     subject: str,
     deadline: datetime | None = None,
-    visibility: TaskVisibilityEnum = TaskVisibilityEnum.VISIBLE,
+    visibility: TodoItemVisibilityEnum = TodoItemVisibilityEnum.VISIBLE,
 ) -> dict[str, str | None]:
     return {
         "subject": subject,
@@ -28,7 +28,7 @@ def make_task_update_dict(
     }
 
 
-def make_task_response_dict(db_model: Task) -> dict[str, str | int | None]:
+def make_todo_item_response_dict(db_model: TodoItem) -> dict[str, str | int | None]:
     return {
         "id": db_model.id,
         "subject": db_model.subject,

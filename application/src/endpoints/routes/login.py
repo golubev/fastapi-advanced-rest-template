@@ -41,6 +41,6 @@ def read_current_user(
     current_user: CurrentUserDependency,
 ) -> User:
     """
-    Get current user. Endpoint used to test the auth flow.
+    Get current `User`. Endpoint used to test the auth flow
     """
     return current_user

@@ -8,7 +8,7 @@ from sqlalchemy.sql import func
 from .base import BaseDBModel
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .task import Task  # noqa: F401
+    from .todo_item import TodoItem  # noqa: F401
 
 
 class User(BaseDBModel):
@@ -31,4 +31,4 @@ class User(BaseDBModel):
     )
 
     # relations
-    tasks: list["Task"] = relationship("Task", back_populates="user")
+    todo_items: list["TodoItem"] = relationship("TodoItem", back_populates="user")
