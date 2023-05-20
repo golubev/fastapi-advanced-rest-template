@@ -3,8 +3,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
+from src.api.dependencies import CurrentUserDependency, SessionDependency
 from src.core.security import generate_access_token
-from src.endpoints.dependencies import CurrentUserDependency, SessionDependency
 from src.models import User
 from src.schemas.token import TokenResponse
 from src.schemas.user import UserResponse

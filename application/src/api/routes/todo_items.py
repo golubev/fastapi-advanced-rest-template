@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
+from src.api.dependencies import CurrentUserDependency, SessionDependency
 from src.config import config
-from src.endpoints.dependencies import CurrentUserDependency, SessionDependency
 from src.enums import TodoItemVisibilityEnum
 from src.models import TodoItem
 from src.schemas.todo_item import TodoItemCreate, TodoItemResponse, TodoItemUpdate

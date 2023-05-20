@@ -6,9 +6,9 @@ from faker import Faker
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
+from src.api.dependencies import SessionDependency
+from src.api.dependencies.auth import get_current_user
 from src.core.db import get_session
-from src.endpoints.dependencies import SessionDependency
-from src.endpoints.dependencies.auth import get_current_user
 from src.main import application
 from src.models import User
 from tests.common import get_db_model, get_db_model_or_exception

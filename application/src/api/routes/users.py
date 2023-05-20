@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 
-from src.endpoints.dependencies import CurrentUserDependency, SessionDependency
+from src.api.dependencies import CurrentUserDependency, SessionDependency
 from src.models.user import User
 from src.schemas.user import UserCreate, UserResponse, UserUpdate
 from src.services import user_service

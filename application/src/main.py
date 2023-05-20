@@ -1,9 +1,9 @@
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.api.api_router import api_router
 from src.core import exceptions as core_exceptions
 from src.core.exceptions import add_application_exception_handler
-from src.endpoints.api_router import api_router
 from src.services import exceptions as services_exceptions
 
 application = FastAPI()
