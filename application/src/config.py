@@ -21,6 +21,8 @@ class Settings(BaseSettings):
 
     API_LIST_LIMIT_DEFAULT = 20
 
+    TODO_ITEMS_DANGLING_HOURS_MAX = 24
+
     class Config:
         case_sensitive = True
 

@@ -1,5 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
+from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 
@@ -52,15 +53,34 @@ class TodoItemService(BaseService[TodoItem]):
             query = query.filter(TodoItem.visibility == visibility)
         return query.offset(offset).limit(limit).all()
 
-    def get_all_open_overdue(
-        self,
-        db: Session,
-    ) -> list[TodoItem]:
+    def get_all_open_overdue(self, db: Session) -> list[TodoItem]:
         return (
             db.query(TodoItem)
             .filter(TodoItem.status == TodoItemStatusEnum.OPEN)
             .filter(TodoItem.deadline != None)  # noqa: E711
             .filter(TodoItem.deadline < func.now())
+            .all()
+        )
+
+    def get_all_visible_not_open_dangling(
+        self, db: Session, *, hours_in_status: int
+    ) -> list[TodoItem]:
+        datetime_in_status_before = datetime.now() - timedelta(hours=hours_in_status)
+        return (
+            db.query(TodoItem)
+            .filter(TodoItem.visibility == TodoItemVisibilityEnum.VISIBLE)
+            .filter(
+                or_(
+                    and_(
+                        TodoItem.status == TodoItemStatusEnum.RESOLVED,
+                        TodoItem.resolve_time < datetime_in_status_before,
+                    ),
+                    and_(
+                        TodoItem.status == TodoItemStatusEnum.OVERDUE,
+                        TodoItem.deadline < datetime_in_status_before,
+                    ),
+                )
+            )
             .all()
         )
 
@@ -123,6 +143,17 @@ class TodoItemService(BaseService[TodoItem]):
             )
         data_to_update_prepared = {
             "status": TodoItemStatusEnum.OVERDUE,
+        }
+        self._update(db, db_model, data_to_update_prepared)
+
+    def move_to_archive(self, db: Session, db_model: TodoItem) -> None:
+        if db_model.visibility != TodoItemVisibilityEnum.VISIBLE:
+            raise StateConflictException(
+                f"Can move TodoItems to archive only with visibility"
+                f" '{TodoItemVisibilityEnum.VISIBLE.value}'"
+            )
+        data_to_update_prepared = {
+            "visibility": TodoItemVisibilityEnum.ARCHIVED,
         }
         self._update(db, db_model, data_to_update_prepared)
 
