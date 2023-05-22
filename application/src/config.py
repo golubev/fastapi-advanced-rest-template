@@ -14,6 +14,11 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
 
+    RABBITMQ_HOST: str
+    RABBITMQ_VIRTUAL_HOST: str
+    RABBITMQ_USER: str
+    RABBITMQ_PASSWORD: str
+
     API_LIST_LIMIT_DEFAULT = 20
 
     class Config:
@@ -25,5 +30,11 @@ class Settings(BaseSettings):
             f"@{self.POSTGRES_HOST}/{self.POSTGRES_DB}"
         )
 
+    def get_rabbitmq_uri(self) -> str:
+        return (
+            f"amqp://{self.RABBITMQ_USER}:{self.RABBITMQ_PASSWORD}"
+            f"@{self.RABBITMQ_HOST}:5672/{self.RABBITMQ_VIRTUAL_HOST}"
+        )
 
-config = Settings()
+
+application_config = Settings()

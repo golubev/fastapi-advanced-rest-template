@@ -20,7 +20,7 @@ services:
       - RABBITMQ_HOST
       - RABBITMQ_VIRTUAL_HOST
       - RABBITMQ_USER
-      - RABBITMQ_PASS
+      - RABBITMQ_PASSWORD
     working_dir: /workspace/application
     volumes:
       - .:/workspace:rw

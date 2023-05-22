@@ -33,6 +33,59 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  celery-beat-scheduler:
+    extends:
+      file: ./docker-compose.common.yml
+      service: application
+    container_name: todo_celery_beat_scheduler
+    command:
+      [
+        "celery",
+        "--app",
+        "src.background_tasks.main",
+        "beat",
+        "--loglevel",
+        "info"
+      ]
+    networks:
+      - todo_network
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  celery-worker:
+    extends:
+      file: ./docker-compose.common.yml
+      service: application
+    container_name: todo_celery_worker
+    command:
+      [
+        "celery",
+        "--app",
+        "src.background_tasks.main",
+        "worker",
+        "--loglevel",
+        "info"
+      ]
+    networks:
+      - todo_network
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "celery -A src.background_tasks.main inspect ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   postgres:
     image: postgres:15.2-alpine
@@ -79,18 +132,27 @@ services:
       - todo_network
     ports:
       - "4445:5432"
+    restart: always
 
   rabbitmq:
     image: rabbitmq:3.11-management
     container_name: todo_rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
       - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_VIRTUAL_HOST}
+    volumes:
+      - todo_rabbitmq_volume:/var/lib/rabbitmq:rw
     networks:
       - todo_network
     ports:
       - "15672:15672"
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 networks:
   todo_network:
@@ -100,4 +162,7 @@ networks:
 volumes:
   todo_postgres_volume:
     name: todo_postgres_volume
+    driver: local
+  todo_rabbitmq_volume:
+    name: todo_rabbitmq_volume
     driver: local

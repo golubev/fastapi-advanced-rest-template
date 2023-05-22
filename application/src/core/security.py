@@ -6,7 +6,7 @@ from jose.exceptions import JWTError
 from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 
-from src.config import config
+from src.config import application_config
 from src.core.exceptions import AccessTokenMalformedException
 
 crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -23,7 +23,7 @@ class AccessTokenPayload(BaseModel):
     def decode_from_access_token(cls, token: str) -> Self:
         try:
             payload = jwt.decode(
-                token, config.SECURITY_SECRET_KEY, algorithms=[ALGORITHM]
+                token, application_config.SECURITY_SECRET_KEY, algorithms=[ALGORITHM]
             )
             return cls(**payload)
         except (JWTError, ValidationError):
@@ -31,13 +31,13 @@ class AccessTokenPayload(BaseModel):
 
     def encode_to_access_token(self) -> str:
         return jwt.encode(
-            self.dict(), key=config.SECURITY_SECRET_KEY, algorithm=ALGORITHM
+            self.dict(), key=application_config.SECURITY_SECRET_KEY, algorithm=ALGORITHM
         )
 
 
 def generate_access_token(subject: int | str) -> str:
     expire = datetime.utcnow() + timedelta(
-        seconds=config.SECURITY_ACCESS_TOKEN_EXPIRE_SECONDS
+        seconds=application_config.SECURITY_ACCESS_TOKEN_EXPIRE_SECONDS
     )
     token_payload = AccessTokenPayload(sub=str(subject), exp=expire)
     return token_payload.encode_to_access_token()

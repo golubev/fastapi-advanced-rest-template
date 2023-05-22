@@ -1,11 +1,14 @@
 {
     "python.formatting.provider": "black",
     "cSpell.words": [
+        "amqp",
         "appuser",
         "autoflake",
         "autoflush",
         "autouse",
         "azuretools",
+        "celerybeat",
+        "celeryconfig",
         "codestyle",
         "devcontainer",
         "eamodio",
@@ -23,6 +26,7 @@
         "psycopg",
         "pydantic",
         "pytest",
+        "rabbitmq",
         "sqlalchemy",
         "STDLIB",
         "THIRDPARTY",

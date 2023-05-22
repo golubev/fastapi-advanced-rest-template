@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
 from src.api.dependencies import CurrentUserDependency, SessionDependency
-from src.config import config
+from src.config import application_config
 from src.enums import TodoItemVisibilityEnum
 from src.models import TodoItem
 from src.schemas.todo_item import TodoItemCreate, TodoItemResponse, TodoItemUpdate
@@ -30,7 +30,7 @@ def list_todo_items(
     current_user: CurrentUserDependency,
     visibility: TodoItemVisibilityEnum | None = None,
     offset: int = 0,
-    limit: int = config.API_LIST_LIMIT_DEFAULT,
+    limit: int = application_config.API_LIST_LIMIT_DEFAULT,
 ) -> list[TodoItem]:
     """
     List current user's `TodoItems`

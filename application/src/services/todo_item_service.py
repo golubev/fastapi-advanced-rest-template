@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 
 from src.enums import TodoItemStatusEnum, TodoItemVisibilityEnum
 from src.models import TodoItem, User
@@ -51,6 +52,18 @@ class TodoItemService(BaseService[TodoItem]):
             query = query.filter(TodoItem.visibility == visibility)
         return query.offset(offset).limit(limit).all()
 
+    def get_all_open_overdue(
+        self,
+        db: Session,
+    ) -> list[TodoItem]:
+        return (
+            db.query(TodoItem)
+            .filter(TodoItem.status == TodoItemStatusEnum.OPEN)
+            .filter(TodoItem.deadline != None)  # noqa: E711
+            .filter(TodoItem.deadline < func.now())
+            .all()
+        )
+
     def create_for_user(
         self, db: Session, create_api_model: TodoItemCreate, user: User
     ) -> TodoItem:
@@ -99,6 +112,17 @@ class TodoItemService(BaseService[TodoItem]):
         data_to_update_prepared = {
             "status": TodoItemStatusEnum.OPEN,
             "resolve_time": None,
+        }
+        self._update(db, db_model, data_to_update_prepared)
+
+    def mark_as_overdue(self, db: Session, db_model: TodoItem) -> None:
+        if db_model.status != TodoItemStatusEnum.OPEN:
+            raise StateConflictException(
+                f"Can mark TodoItems as overdue only in status"
+                f" '{TodoItemStatusEnum.OPEN.value}'"
+            )
+        data_to_update_prepared = {
+            "status": TodoItemStatusEnum.OVERDUE,
         }
         self._update(db, db_model, data_to_update_prepared)
 
