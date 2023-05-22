@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     EMAIL_FROM_EMAIL: str
     EMAIL_FROM_NAME: str
-    EMAIL_TEMPLATES_DIR: str = "./application/src/emails/templates/"
+    EMAIL_TEMPLATES_DIR: str = "/workspace/application/src/emails/templates/"
 
     SECURITY_SECRET_KEY: str = secrets.token_urlsafe(32)
     SECURITY_ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 7  # 7 days

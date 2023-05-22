@@ -29,15 +29,14 @@ def send_email(email_to: str, subject: str, body_html: str) -> None:
         smtp_options["password"] = application_config.SMTP_PASSWORD
 
     emails.Message(
-        email_to=email_to,
+        mail_to=email_to,
         subject=subject,
         html=body_html,
         mail_from=(
             application_config.EMAIL_FROM_NAME,
             application_config.EMAIL_FROM_EMAIL,
         ),
-        smtp_options=smtp_options,
-    ).send()
+    ).send(smtp=smtp_options)
 
 
 def _render_from_template(template: str, **kwargs: Any) -> str:

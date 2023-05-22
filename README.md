@@ -56,6 +56,13 @@ docker compose exec api alembic upgrade head
 Navigate to http://localhost:8000/docs.
 
 
+## MailHog web UI
+
+MailHog is an email testing tool for developers. It mimics sending a real email and allows you to see sent emails in your browser.
+
+Navigate to http://localhost:8025/.
+
+
 ## Day-to-day tasks cheat sheet
 
 Navigate to [`application/README.md`](./application/README.md) to see frequently used commands cheat sheet.
