@@ -1,0 +1,4 @@
+.celerybeat-schedule
+.coverage
+.mypy_cache
+__pycache__
