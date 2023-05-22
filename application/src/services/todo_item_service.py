@@ -73,10 +73,12 @@ class TodoItemService(BaseService[TodoItem]):
                 or_(
                     and_(
                         TodoItem.status == TodoItemStatusEnum.RESOLVED,
+                        TodoItem.resolve_time != None,  # noqa: E711
                         TodoItem.resolve_time < datetime_in_status_before,
                     ),
                     and_(
                         TodoItem.status == TodoItemStatusEnum.OVERDUE,
+                        TodoItem.deadline != None,  # noqa: E711
                         TodoItem.deadline < datetime_in_status_before,
                     ),
                 )

@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+from sqlalchemy.schema import Index
 from sqlalchemy.sql import func
 
 from src.enums import TodoItemStatusEnum, TodoItemVisibilityEnum
@@ -57,3 +58,41 @@ class TodoItem(BaseDBModel):
     update_time: datetime | None = Column(
         DateTime, nullable=True, default=None, onupdate=func.now()
     )
+
+
+# BEGIN: highly specific partial indices for services' certain methods
+#
+# They shouldn't contain too many rows and produce a redundant overhead.
+# While they should greatly speed up the queries.
+
+# used in `TodoItemService.get_all_open_overdue()`
+Index(
+    "ix_todo_items_deadline_when_opened",
+    TodoItem.deadline,
+    postgresql_where=(
+        (TodoItem.status == TodoItemStatusEnum.OPEN)
+        & (TodoItem.deadline != None)  # noqa: E711
+    ),
+)
+
+# the two are both used in `TodoItemService.get_all_visible_not_open_dangling()`
+Index(
+    "ix_todo_items_deadline_when_visible_overdue",
+    TodoItem.deadline,
+    postgresql_where=(
+        (TodoItem.visibility == TodoItemVisibilityEnum.VISIBLE)
+        & (TodoItem.status == TodoItemStatusEnum.OVERDUE)
+        & (TodoItem.deadline != None)  # noqa: E711
+    ),
+)
+Index(
+    "ix_todo_items_resolve_time_when_visible_resolved",
+    TodoItem.resolve_time,
+    postgresql_where=(
+        (TodoItem.visibility == TodoItemVisibilityEnum.VISIBLE)
+        & (TodoItem.status == TodoItemStatusEnum.RESOLVED)
+        & (TodoItem.resolve_time != None)  # noqa: E711
+    ),
+)
+
+# END: highly specific partial indices for services' certain methods
