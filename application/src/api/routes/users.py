@@ -1,6 +1,8 @@
 from fastapi import APIRouter, status
 
 from src.api.dependencies import CurrentUserDependency, SessionDependency
+from src.background_tasks import send_email
+from src.emails.users import compose_registration_email
 from src.models.user import User
 from src.schemas.user import UserCreate, UserResponse, UserUpdate
 from src.services import user_service
@@ -17,7 +19,11 @@ def create_user(
     """
     Register (create) a new `User`.
     """
-    return user_service.create(db, create_api_model)
+    new_user = user_service.create(db, create_api_model)
+
+    send_email.apply_async(args=(new_user.email, *compose_registration_email(new_user)))
+
+    return new_user
 
 
 @router.get("/users/current-user", response_model=UserResponse)

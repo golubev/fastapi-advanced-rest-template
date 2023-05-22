@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from sqlalchemy import and_, or_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from sqlalchemy.sql import func
 
 from src.enums import TodoItemStatusEnum, TodoItemVisibilityEnum
@@ -59,6 +59,7 @@ class TodoItemService(BaseService[TodoItem]):
             .filter(TodoItem.status == TodoItemStatusEnum.OPEN)
             .filter(TodoItem.deadline != None)  # noqa: E711
             .filter(TodoItem.deadline < func.now())
+            .options(selectinload(TodoItem.user))
             .all()
         )
 

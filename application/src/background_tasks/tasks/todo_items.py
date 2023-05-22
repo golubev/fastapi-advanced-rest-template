@@ -1,17 +1,18 @@
 from src.config import application_config
 from src.core.db import get_session
+from src.models import TodoItem
 from src.services import todo_item_service
 
 
-def update_status_overdue() -> int:
+def update_status_overdue() -> list[TodoItem]:
     with get_session() as db:
         todo_items_to_mark_as_overdue = todo_item_service.get_all_open_overdue(db)
         for todo_item in todo_items_to_mark_as_overdue:
             todo_item_service.mark_as_overdue(db, todo_item)
-    return len(todo_items_to_mark_as_overdue)
+    return todo_items_to_mark_as_overdue
 
 
-def move_dangling_to_archive() -> int:
+def move_dangling_to_archive() -> list[TodoItem]:
     with get_session() as db:
         todo_items_to_move_to_archive = (
             todo_item_service.get_all_visible_not_open_dangling(
@@ -21,4 +22,4 @@ def move_dangling_to_archive() -> int:
         )
         for todo_item in todo_items_to_move_to_archive:
             todo_item_service.move_to_archive(db, todo_item)
-    return len(todo_items_to_move_to_archive)
+    return todo_items_to_move_to_archive

@@ -6,6 +6,14 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     ENVIRONMENT: str = "prod"
 
+    API_LIST_LIMIT_DEFAULT: int = 20
+
+    TODO_ITEMS_DANGLING_HOURS_MAX: int = 24
+
+    EMAIL_FROM_EMAIL: str
+    EMAIL_FROM_NAME: str
+    EMAIL_TEMPLATES_DIR: str = "./application/src/emails/templates/"
+
     SECURITY_SECRET_KEY: str = secrets.token_urlsafe(32)
     SECURITY_ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 7  # 7 days
 
@@ -19,9 +27,11 @@ class Settings(BaseSettings):
     RABBITMQ_USER: str
     RABBITMQ_PASSWORD: str
 
-    API_LIST_LIMIT_DEFAULT = 20
-
-    TODO_ITEMS_DANGLING_HOURS_MAX = 24
+    SMTP_DO_USE_TLS: bool
+    SMTP_PORT: str
+    SMTP_HOST: str
+    SMTP_USER: str
+    SMTP_PASSWORD: str
 
     class Config:
         case_sensitive = True

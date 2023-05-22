@@ -77,7 +77,11 @@ services:
       - todo_network
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "celery -A src.background_tasks.main inspect ping" ]
+      test:
+        [
+          "CMD-SHELL",
+          "celery -A src.background_tasks.main inspect ping"
+        ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -153,6 +157,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: todo_mailhog
+    networks:
+      - todo_network
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    restart: always
 
 networks:
   todo_network:
