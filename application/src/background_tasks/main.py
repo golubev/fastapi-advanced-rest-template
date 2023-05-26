@@ -37,12 +37,12 @@ def todo_items_move_dangling_to_archive() -> int:
 @application.on_after_finalize.connect
 def setup_periodic_tasks(sender: Celery, **kwargs: Any) -> None:
     sender.add_periodic_task(
-        60,
+        300,
         todo_items_update_status_overdue.s(),
-        expires=40,
+        expires=240,
     )
     sender.add_periodic_task(
-        60,
+        300,
         todo_items_move_dangling_to_archive.s(),
-        expires=40,
+        expires=240,
     )
