@@ -1,7 +1,51 @@
 # fastapi-todo-rest
 
 
-REST API backend for a TODO application built with FastAPI. Inspired by [tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql) and [testdrivenio/fastapi-react](https://github.com/testdrivenio/fastapi-react).
+This is a REST API backend for a TODO application built with Python and FastAPI. Inspired by [tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql) and [testdrivenio/fastapi-react](https://github.com/testdrivenio/fastapi-react).
+
+The project is intended to be used as a template or a reference for creating new web services. The most interesting part is the tools and technologies that this project use. See the Features section below.
+
+From the perspective of functional requirements the application is quite simple and offers the next functionality:
+- register a user and send him a welcome e-mail in background, update profile, delete profile
+- login a user
+- create a todo item providing subject and optional deadline, delete a todo item
+- edit a todo item by changing subject, deadline or visibility (e.g. move to archive)
+- resolve/reopen a todo item
+- periodically check for todo items that passed the deadline and mark them as overdue with e-mail notification
+- periodically check for todo items that were resolved or overdue more than 24h ago and archive them
+
+## Tools and technologies used
+
+- Docker and Docker Compose
+- [vscode Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers) for the best developer experience
+- GitHub Actions to run linters and tests on a pull-request
+- git pre-commit hook that runs linters
+- Python, Poetry
+- FastAPI, Pydantic
+- JWT token authentication
+- PostgreSQL and SQLAlchemy
+  - alembic migrations
+  - models with `create_time` and `update_time` timestamps that are being set automatically
+  - using partial indices for the best performance and the smallest overhead
+- Celery
+  - scheduling background tasks directly from an API path operation's code
+  - running periodic background tasks with a certain schedule
+  - backed by RabbitMQ
+  - using [Flower](https://github.com/mher/flower) to be able to monitor Celery tasks
+- Pytest
+  - tests are run against a separate isolated test DB
+  - initial DB state is declared in a database seeding script
+  - test data with either specific or faked (with Faker) fields is being created using factories
+- linters and static analysis tools
+  - [black](https://pypi.org/project/black/) for the code style checks
+  - [isort](https://pycqa.github.io/isort/) for the imports order check
+  - [Flake8](https://flake8.pycqa.org/en/latest/) for errors, unused code, code style, and cyclomatic complexity checks
+  - [mypy](https://www.mypy-lang.org/) to do the type checking
+- code autoformatting and cleaning
+  - [autoflake](https://pypi.org/project/autoflake/) to remove unused imports and unused variables
+  - [black](https://pypi.org/project/black/) to autoformat the code to conform to the PEP 8
+  - [isort](https://pycqa.github.io/isort/) to sort imports
+- [MailHog](https://github.com/mailhog/MailHog) for e-mails testing
 
 
 ## Prerequisites (dependencies)
@@ -53,14 +97,28 @@ docker compose exec api alembic upgrade head
 
 ## OpenAPI docs
 
+Out of the box FastAPI provides autogeneration of an OpenAPI documentation for your REST API.
+
 Navigate to http://localhost:8000/docs.
+
+![OpenAPI docs](./img/openapi.png "OpenAPI docs")
 
 
 ## MailHog web UI
 
-MailHog is an email testing tool for developers. It mimics sending a real email and allows you to see sent emails in your browser.
+[MailHog](https://github.com/mailhog/MailHog) is an email testing tool for developers. It mimics sending a real email and allows you to see sent emails in your browser.
 
 Navigate to http://localhost:8025/.
+
+![MailHog](./img/mailhog.png "MailHog")
+
+## Flower web UI
+
+[Flower](https://github.com/mher/flower) is a web based tool for monitoring and administrating Celery clusters. Intended to be used in the project to debug Celery tasks.
+
+Navigate to http://localhost:5555/. Protected with basic HTTP authentication. User and password are being set via `FLOWER_USER` and `FLOWER_PASSWORD` environment variables in the `.env` file.
+
+![Flower](./img/flower.png "Flower")
 
 
 ## Day-to-day tasks cheat sheet

@@ -10,6 +10,7 @@
         "celerybeat",
         "celeryconfig",
         "codestyle",
+        "cyclomatic",
         "devcontainer",
         "eamodio",
         "fastapi",
