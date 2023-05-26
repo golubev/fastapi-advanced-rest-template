@@ -158,6 +158,22 @@ services:
       timeout: 5s
       retries: 10
 
+  flower:
+    image: mher/flower:1.2
+    command:
+      [
+        "celery",
+        "--broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@${RABBITMQ_HOST}:5672/${RABBITMQ_VIRTUAL_HOST}",
+        "flower",
+        "--broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@${RABBITMQ_HOST}:15672/api/",
+        "--basic_auth=${FLOWER_USER}:${FLOWER_PASSWORD}"
+      ]
+    networks:
+      - todo_network
+    ports:
+      - "5555:5555"
+    restart: always
+
   mailhog:
     image: mailhog/mailhog:v1.0.1
     container_name: todo_mailhog
