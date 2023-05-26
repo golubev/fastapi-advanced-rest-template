@@ -160,6 +160,7 @@ services:
 
   flower:
     image: mher/flower:1.2
+    container_name: todo_flower
     command:
       [
         "celery",

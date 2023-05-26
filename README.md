@@ -17,6 +17,8 @@ From the perspective of functional requirements the application is quite simple 
 ## Tools and technologies used
 
 - Docker and Docker Compose
+  - using healthchecks as readiness checks
+  - reusing services definitions in Compose via `extends`
 - [vscode Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers) for the best developer experience
 - GitHub Actions to run linters and tests on a pull-request
 - git pre-commit hook that runs linters
