@@ -17,17 +17,6 @@ from .exceptions import (
 
 
 class TodoItemService(BaseService[TodoItem]):
-    def get_for_user(self, db: Session, id: int, user_owner: User) -> TodoItem | None:
-        """
-        Get a `TodoItem` by `id`. Check if the `user_owner` is an owner of the \
-        `TodoItem`.
-        """
-        todo_item = self._get(db, id)
-        if todo_item is None:
-            return None
-        self._check_is_owner(todo_item, user_owner)
-        return todo_item
-
     def get_for_user_or_exception(
         self, db: Session, id: int, user_owner: User
     ) -> TodoItem:

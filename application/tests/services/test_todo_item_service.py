@@ -17,53 +17,6 @@ from tests import factories
 from tests.common import get_db_model, get_db_model_or_exception
 
 
-def test_get_for_user(db: Session, session_faker: Faker) -> None:
-    target_todo_item = factories.make_todo_item_persisted(
-        db,
-        session_faker,
-        user_owner_username="johnny.multitasker",
-        subject="todo item for get_for_user",
-    )
-    target_todo_item_id: int = target_todo_item.id  # type: ignore
-    target_todo_item_user: User = target_todo_item.user
-
-    todo_item = todo_item_service.get_for_user(
-        db, target_todo_item_id, target_todo_item_user
-    )
-
-    assert todo_item is not None
-    assert todo_item.id == target_todo_item.id
-
-
-def test_get_for_user_not_owner(db: Session, session_faker: Faker) -> None:
-    target_todo_item = factories.make_todo_item_persisted(
-        db,
-        session_faker,
-        user_owner_username="johnny.multitasker",
-        subject="todo item for get_for_user if user is not an owner",
-    )
-    target_todo_item_id: int = target_todo_item.id  # type: ignore
-    user_not_owner = get_db_model_or_exception(
-        db, User, username="jane.without.any.todo_items"
-    )
-
-    with pytest.raises(OwnerAccessViolationException):
-        todo_item_service.get_for_user(db, target_todo_item_id, user_not_owner)
-
-
-def test_get_for_user_not_found(db: Session) -> None:
-    todo_item_id_not_exists = 9999
-    some_user = get_db_model_or_exception(
-        db, User, username="jane.without.any.todo_items"
-    )
-
-    todo_item_found = todo_item_service.get_for_user(
-        db, todo_item_id_not_exists, some_user
-    )
-
-    assert todo_item_found is None
-
-
 def test_get_for_user_or_exception(db: Session, session_faker: Faker) -> None:
     target_todo_item = factories.make_todo_item_persisted(
         db,
