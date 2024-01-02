@@ -1,7 +1,7 @@
 # fastapi-todo-rest
 
 
-This is a REST API backend for a TODO application built with Python and FastAPI. Inspired by [tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql) and [testdrivenio/fastapi-react](https://github.com/testdrivenio/fastapi-react).
+REST API backend boilerplate built with FastAPI and Celery. Inspired by [tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql) and [testdrivenio/fastapi-react](https://github.com/testdrivenio/fastapi-react).
 
 The project is intended to be used as a template or a reference for creating new web services. The most interesting part is the tools and technologies that this project use. See the Features section below.
 
