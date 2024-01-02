@@ -1,16 +1,13 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Self
 
+import bcrypt
 from jose import jwt
 from jose.exceptions import JWTError
-from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 
 from src.config import application_config
 from src.core.exceptions import AccessTokenMalformedException
-
-crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 ALGORITHM = "HS256"
 
@@ -36,7 +33,7 @@ class AccessTokenPayload(BaseModel):
 
 
 def generate_access_token(subject: int | str) -> str:
-    expire = datetime.utcnow() + timedelta(
+    expire = datetime.now(UTC) + timedelta(
         seconds=application_config.SECURITY_ACCESS_TOKEN_EXPIRE_SECONDS
     )
     token_payload = AccessTokenPayload(sub=str(subject), exp=expire)
@@ -44,8 +41,8 @@ def generate_access_token(subject: int | str) -> str:
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return crypt_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
 
 def get_password_hash(password: str) -> str:
-    return crypt_context.hash(password)
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
