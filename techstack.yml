@@ -27,18 +27,6 @@ tools:
   sub_category: Languages
   image_url: https://img.stackshare.io/service/993/pUBY5pVj.png
   detection_source: Repo Metadata
-- name: Heroku Postgres
-  description: Heroku's Database-as-a-Service. Based on the most powerful open-source
-    database, PostgreSQL
-  website_url: https://www.heroku.com/postgres
-  open_source: false
-  hosted_saas: true
-  category: Data Stores
-  sub_category: PostgreSQL as a Service
-  image_url: https://img.stackshare.io/service/2516/original.png
-  detection_source: docker-compose.yml
-  last_updated_by: golubev
-  last_updated_on: 2023-05-22 10:10:14.000000000 Z
 - name: PostgreSQL
   description: A powerful, open source object-relational database system
   website_url: http://www.postgresql.org/
@@ -61,17 +49,6 @@ tools:
   detection_source: docker-compose.yml
   last_updated_by: golubev
   last_updated_on: 2023-05-22 10:10:14.000000000 Z
-- name: pgvector
-  description: Open-source vector similarity search for Postgres
-  website_url: https://github.com/pgvector/pgvector/
-  open_source: false
-  hosted_saas: false
-  category: Data Stores
-  sub_category: Database Tools
-  image_url: https://img.stackshare.io/service/109221/default_b888cdf5617d936aa6aacf130911906955508639.png
-  detection_source: application/pyproject.toml
-  last_updated_by: golubev
-  last_updated_on: 2023-05-06 15:59:08.000000000 Z
 - name: Docker Compose
   description: Define and run multi-container applications with Docker
   website_url: https://github.com/docker/compose
@@ -138,17 +115,6 @@ tools:
   detection_source: docker-compose.yml
   last_updated_by: golubev
   last_updated_on: 2023-05-09 09:48:07.000000000 Z
-- name: Flower
-  description: Train AI on distributed data
-  website_url: https://flower.dev/
-  open_source: true
-  hosted_saas: false
-  category: Application Utilities
-  sub_category: Machine Learning Tools
-  image_url: https://img.stackshare.io/service/48754/default_6b523d55cfbfad0ddf4b3d99a2fe7fa7277d3895.jpg
-  detection_source: docker-compose.yml
-  last_updated_by: golubev
-  last_updated_on: 2023-05-26 16:55:19.000000000 Z
 - name: HTML
   description: Hypertext Markup Language for creating web pages.
   website_url: http://
@@ -158,17 +124,6 @@ tools:
   detection_source: application/src/emails/templates/todo_item_overdue.html
   last_updated_by: golubev
   last_updated_on: 2023-05-22 19:34:52.000000000 Z
-- name: LangChain
-  description: Build AI apps with LLMs through composability
-  website_url: https://github.com/hwchase17/langchain
-  open_source: true
-  hosted_saas: false
-  category: Communications
-  sub_category: Large Language Model Tools
-  image_url: https://img.stackshare.io/service/48790/default_5b6c6b73f1ff3775c85d2a1ba954cb87e30cbf13.jpg
-  detection_source: application/pyproject.toml
-  last_updated_by: golubev
-  last_updated_on: 2023-05-06 15:59:08.000000000 Z
 - name: Shell
   description: A shell is a text-based terminal, used for manipulating programs and
     files. Shell scripts typically manage program execution.
