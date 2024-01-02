@@ -1,4 +1,4 @@
-FROM python:3.11-bullseye
+FROM python:3.12-bullseye
 
 WORKDIR /usr/src/app
 
@@ -12,7 +12,7 @@ RUN useradd -m -u $DOCKER_USER_UID -g $DOCKER_USER_GID -o -s /bin/bash appuser
 
 # configure and install and poetry
 ENV POETRY_HOME=/opt/poetry \
-    POETRY_VERSION="1.4.2" \
+    POETRY_VERSION="1.7.1" \
     POETRY_VIRTUALENVS_CREATE=false
 RUN curl -sSL https://install.python-poetry.org | python
 ENV PATH="$POETRY_HOME/bin:$PATH"
@@ -34,7 +34,7 @@ RUN apt update \
     && dpkg-reconfigure --frontend=noninteractive locales \
     # workaround to run "poetry add" in vscode Dev Containers
     # (don't want to enable virtualenvs as a redundant layer in the context of Docker)
-    && chown -R appuser:appuser /usr/local/lib/python3.11/site-packages/ \
+    && chown -R appuser:appuser /usr/local/lib/python3.12/site-packages/ \
     && chown -R appuser:appuser /usr/local/bin/
 
 # END local dev environment specific layers
