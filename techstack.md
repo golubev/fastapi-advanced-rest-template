@@ -6,16 +6,12 @@ golubev/fastapi-todo-rest is built on the following main stack:
 - [Python](https://www.python.org) – Languages
 - [PostgreSQL](http://www.postgresql.org/) – Databases
 - [RabbitMQ](http://www.rabbitmq.com/) – Message Queue
-- [Heroku Postgres](https://www.heroku.com/postgres) – PostgreSQL as a Service
 - [Docker Compose](https://github.com/docker/compose) – Container Tools
 - [Mako](https://github.com/zzzeek/mako) – Templating Languages & Extensions
 - [Shell](https://en.wikipedia.org/wiki/Shell_script) – Shells
 - [Alpine Linux](https://www.alpinelinux.org/) – Operating Systems
 - [cURL](http://curl.haxx.se/) – File Transfer
 - [GitHub Actions](https://github.com/features/actions) – Continuous Integration
-- [Flower](https://flower.dev/) – Machine Learning Tools
-- [LangChain](https://github.com/hwchase17/langchain) – Large Language Model Tools
-- [pgvector](https://github.com/pgvector/pgvector/) – Database Tools
 
 Full tech stack [here](/techstack.md)
 
@@ -28,16 +24,12 @@ golubev/fastapi-todo-rest is built on the following main stack:
 - <img width='25' height='25' src='https://img.stackshare.io/service/993/pUBY5pVj.png' alt='Python'/> [Python](https://www.python.org) – Languages
 - <img width='25' height='25' src='https://img.stackshare.io/service/1028/ASOhU5xJ.png' alt='PostgreSQL'/> [PostgreSQL](http://www.postgresql.org/) – Databases
 - <img width='25' height='25' src='https://img.stackshare.io/service/1061/default_df93e9a30d27519161b39d8c1d5c223c1642d187.jpg' alt='RabbitMQ'/> [RabbitMQ](http://www.rabbitmq.com/) – Message Queue
-- <img width='25' height='25' src='https://img.stackshare.io/service/2516/original.png' alt='Heroku Postgres'/> [Heroku Postgres](https://www.heroku.com/postgres) – PostgreSQL as a Service
 - <img width='25' height='25' src='https://img.stackshare.io/service/3136/docker-compose.png' alt='Docker Compose'/> [Docker Compose](https://github.com/docker/compose) – Container Tools
 - <img width='25' height='25' src='https://img.stackshare.io/service/3583/default_43e3ee00dcc48a40f6fcba33551e4f5a99a10537.png' alt='Mako'/> [Mako](https://github.com/zzzeek/mako) – Templating Languages & Extensions
 - <img width='25' height='25' src='https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png' alt='Shell'/> [Shell](https://en.wikipedia.org/wiki/Shell_script) – Shells
 - <img width='25' height='25' src='https://img.stackshare.io/service/6429/alpine_linux.png' alt='Alpine Linux'/> [Alpine Linux](https://www.alpinelinux.org/) – Operating Systems
 - <img width='25' height='25' src='https://img.stackshare.io/service/6552/curl-logo.png' alt='cURL'/> [cURL](http://curl.haxx.se/) – File Transfer
 - <img width='25' height='25' src='https://img.stackshare.io/service/11563/actions.png' alt='GitHub Actions'/> [GitHub Actions](https://github.com/features/actions) – Continuous Integration
-- <img width='25' height='25' src='https://img.stackshare.io/service/48754/default_6b523d55cfbfad0ddf4b3d99a2fe7fa7277d3895.jpg' alt='Flower'/> [Flower](https://flower.dev/) – Machine Learning Tools
-- <img width='25' height='25' src='https://img.stackshare.io/service/48790/default_5b6c6b73f1ff3775c85d2a1ba954cb87e30cbf13.jpg' alt='LangChain'/> [LangChain](https://github.com/hwchase17/langchain) – Large Language Model Tools
-- <img width='25' height='25' src='https://img.stackshare.io/service/109221/default_b888cdf5617d936aa6aacf130911906955508639.png' alt='pgvector'/> [pgvector](https://github.com/pgvector/pgvector/) – Database Tools
 
 Full tech stack [here](/techstack.md)
 
@@ -48,7 +40,7 @@ Full tech stack [here](/techstack.md)
 # Tech Stack File
 ![](https://img.stackshare.io/repo.svg "repo") [golubev/fastapi-todo-rest](https://github.com/golubev/fastapi-todo-rest)![](https://img.stackshare.io/public_badge.svg "public")
 <br/><br/>
-|25<br/>Tools used|12/09/23 <br/>Report generated|
+|21<br/>Tools used|12/09/23 <br/>Report generated|
 |------|------|
 </div>
 
@@ -73,15 +65,8 @@ Full tech stack [here](/techstack.md)
 </tr>
 </table>
 
-## <img src='https://img.stackshare.io/databases.svg'/> Data (4)
+## <img src='https://img.stackshare.io/databases.svg'/> Data (2)
 <table><tr>
-  <td align='center'>
-  <img width='36' height='36' src='https://img.stackshare.io/service/2516/original.png' alt='Heroku Postgres'>
-  <br>
-  <sub><a href="https://www.heroku.com/postgres">Heroku Postgres</a></sub>
-  <br>
-  <sub></sub>
-</td>
 
 <td align='center'>
   <img width='36' height='36' src='https://img.stackshare.io/service/1028/ASOhU5xJ.png' alt='PostgreSQL'>
@@ -95,14 +80,6 @@ Full tech stack [here](/techstack.md)
   <img width='36' height='36' src='https://img.stackshare.io/service/1061/default_df93e9a30d27519161b39d8c1d5c223c1642d187.jpg' alt='RabbitMQ'>
   <br>
   <sub><a href="http://www.rabbitmq.com/">RabbitMQ</a></sub>
-  <br>
-  <sub></sub>
-</td>
-
-<td align='center'>
-  <img width='36' height='36' src='https://img.stackshare.io/service/109221/default_b888cdf5617d936aa6aacf130911906955508639.png' alt='pgvector'>
-  <br>
-  <sub><a href="https://github.com/pgvector/pgvector/">pgvector</a></sub>
   <br>
   <sub></sub>
 </td>
@@ -147,33 +124,12 @@ Full tech stack [here](/techstack.md)
 </tr>
 </table>
 
-## <img src='https://img.stackshare.io/saas.svg'/> Software as a Service (SaaS) (1)
-<table><tr>
-  <td align='center'>
-  <img width='36' height='36' src='https://img.stackshare.io/service/6552/curl-logo.png' alt='cURL'>
-  <br>
-  <sub><a href="http://curl.haxx.se/">cURL</a></sub>
-  <br>
-  <sub></sub>
-</td>
-
-</tr>
-</table>
-
-## Other (5)
+## Other (4)
 <table><tr>
   <td align='center'>
   <img width='36' height='36' src='https://img.stackshare.io/service/6429/alpine_linux.png' alt='Alpine Linux'>
   <br>
   <sub><a href="https://www.alpinelinux.org/">Alpine Linux</a></sub>
-  <br>
-  <sub></sub>
-</td>
-
-<td align='center'>
-  <img width='36' height='36' src='https://img.stackshare.io/service/48754/default_6b523d55cfbfad0ddf4b3d99a2fe7fa7277d3895.jpg' alt='Flower'>
-  <br>
-  <sub><a href="https://flower.dev/">Flower</a></sub>
   <br>
   <sub></sub>
 </td>
@@ -187,17 +143,17 @@ Full tech stack [here](/techstack.md)
 </td>
 
 <td align='center'>
-  <img width='36' height='36' src='https://img.stackshare.io/service/48790/default_5b6c6b73f1ff3775c85d2a1ba954cb87e30cbf13.jpg' alt='LangChain'>
+  <img width='36' height='36' src='https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png' alt='Shell'>
   <br>
-  <sub><a href="https://github.com/hwchase17/langchain">LangChain</a></sub>
+  <sub><a href="https://en.wikipedia.org/wiki/Shell_script">Shell</a></sub>
   <br>
   <sub></sub>
 </td>
 
 <td align='center'>
-  <img width='36' height='36' src='https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png' alt='Shell'>
+  <img width='36' height='36' src='https://img.stackshare.io/service/6552/curl-logo.png' alt='cURL'>
   <br>
-  <sub><a href="https://en.wikipedia.org/wiki/Shell_script">Shell</a></sub>
+  <sub><a href="http://curl.haxx.se/">cURL</a></sub>
   <br>
   <sub></sub>
 </td>
