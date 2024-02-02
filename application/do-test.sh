@@ -46,4 +46,4 @@ alembic upgrade head
 # insert test data into the database
 python tests/seed_database.py
 
-pytest --cov=src --cov-report=term-missing tests "${@}"
+pytest --cov=src --cov-report=term-missing --cov-report=xml tests "${@}"
