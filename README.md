@@ -1,18 +1,19 @@
-# fastapi-todo-rest
+# Advanced To-Do app REST API backend
 
+A powerful template that contains 10+ building blocks for a web application with 10+ advanced development tools.
 
-REST API backend boilerplate built with Python, FastAPI, and Celery. Inspired by [tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql) and [testdrivenio/fastapi-react](https://github.com/testdrivenio/fastapi-react).
+Modern web application REST API backend boilerplate built with Python, FastAPI, and Celery. Inspired by [tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql) and [testdrivenio/fastapi-react](https://github.com/testdrivenio/fastapi-react).
 
-The project is intended to be used as a template or a reference for creating new web services. The most interesting part is the tools and technologies that this project use. See the Features section below.
-
-From the perspective of functional requirements the application is quite simple and offers the next functionality:
+The application offers the functionality that can be used as a set of building blocks for satisfying most of the modern application's typical functional requirements:
 - register a user and send him a welcome e-mail in background, update profile, delete profile
-- login a user
+- login a user, use OAuth2 token authentication
 - create a todo item providing subject and optional deadline, delete a todo item
 - edit a todo item by changing subject, deadline or visibility (e.g. move to archive)
 - resolve/reopen a todo item
-- periodically check for todo items that passed the deadline and mark them as overdue with e-mail notification
-- periodically check for todo items that were resolved or overdue more than 24h ago and archive them
+- in background periodically check for todo items that passed the deadline and mark them as overdue with e-mail notification
+- in background periodically check for todo items that were resolved or overdue more than 24h ago and archive them
+
+Adapt and customize those to your business domain and requirements.
 
 ## Tools and technologies used
 
