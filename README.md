@@ -24,7 +24,10 @@ From the perspective of functional requirements the application is quite simple 
 - git pre-commit hook that runs linters
 - Python, Poetry
 - FastAPI, Pydantic
-- JWT token authentication
+- built-in OpenAPI (Swagger) Specification
+  - "Try it out" button - easy to use playground with provided request payload examples
+  - integrated OAuth2 authorization for trying endpoints that require authorization
+- OAuth2 token authentication
 - PostgreSQL and SQLAlchemy
   - alembic migrations
   - models with `create_time` and `update_time` timestamps that are being set automatically
